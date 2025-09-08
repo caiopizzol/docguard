@@ -4,11 +4,6 @@ on:
   push:
     branches: ['release/**']
   workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Release branch to deploy'
-        required: false
-        default: ''
 
 permissions:
   contents: write
