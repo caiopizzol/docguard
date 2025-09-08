@@ -1,3 +1,10 @@
+# [0.2.0-next.2](https://github.com/caiopizzol/docguard/compare/v0.2.0-next.1...v0.2.0-next.2) (2025-09-08)
+
+
+### Features
+
+* bump version ([3e574a0](https://github.com/caiopizzol/docguard/commit/3e574a004ccbabc338c172308c4586e0847db678))
+
 # [0.2.0-next.1](https://github.com/caiopizzol/docguard/compare/v0.1.1-next.1...v0.2.0-next.1) (2025-09-08)
 
 ### Features
