@@ -1,4 +1,6 @@
-# DocGuard
+
+<img width="250" height="70" alt="logo-light" src="https://github.com/user-attachments/assets/ab45ecc7-adad-42e2-84bd-a87145fbc01b" />
+<br/><br/>
 
 Prevent critical documentation from disappearing. A simple CI check that catches when important API docs get accidentally deleted.
 
