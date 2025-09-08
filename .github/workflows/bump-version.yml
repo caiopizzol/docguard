@@ -4,11 +4,16 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Released version to bump from (e.g., 0.2.0)'
+        required: false
+        type: string
 
 jobs:
   bump-version:
-    # Only run for stable releases (not prereleases)
-    if: '!github.event.release.prerelease'
+    # Only run for stable releases (not prereleases) or manual trigger
+    if: '!github.event.release.prerelease || github.event_name == "workflow_dispatch"'
     runs-on: ubuntu-latest
 
     steps:
@@ -26,13 +31,30 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+      - name: Determine version to bump from
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            if [ -n "${{ inputs.version }}" ]; then
+              # Use provided version
+              RELEASED_VERSION="${{ inputs.version }}"
+            else
+              # Get latest tag
+              RELEASED_VERSION=$(git describe --tags --abbrev=0 | sed 's/^v//')
+            fi
+          else
+            # From release event
+            RELEASED_VERSION="${{ github.event.release.tag_name }}"
+            RELEASED_VERSION="${RELEASED_VERSION#v}"
+          fi
+
+          echo "released_version=$RELEASED_VERSION" >> $GITHUB_OUTPUT
+
       - name: Bump to next minor version
         run: |
-          # Get the released version (e.g., 1.0.0)
-          RELEASED_VERSION="${{ github.event.release.tag_name }}"
-          RELEASED_VERSION="${RELEASED_VERSION#v}" # Remove 'v' prefix if present
+          RELEASED_VERSION="${{ steps.get_version.outputs.released_version }}"
 
-          # Calculate next minor version (e.g., 1.1.0)
+          # Calculate next minor version
           IFS='.' read -r major minor patch <<< "$RELEASED_VERSION"
           NEXT_VERSION="$major.$((minor + 1)).0"
 
