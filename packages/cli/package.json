@@ -1,0 +1,42 @@
+{
+    "name": "docguard",
+    "version": "0.1.0",
+    "description": "Documentation regression detection CLI tool",
+    "main": "dist/index.js",
+    "bin": {
+        "docguard": "./dist/index.js"
+    },
+    "scripts": {
+        "build": "tsc",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "tsc --watch",
+        "prepublishOnly": "npm run build"
+    },
+    "dependencies": {
+        "@docguard/core": "workspace:*"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "typescript": "^5.0.0"
+    },
+    "files": [
+        "dist"
+    ],
+    "engines": {
+        "node": ">=16.0.0"
+    },
+    "keywords": [
+        "documentation",
+        "regression",
+        "cli",
+        "git",
+        "docs",
+        "markdown"
+    ],
+    "author": "cpolive",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/cpolive/docguard.git"
+    }
+}

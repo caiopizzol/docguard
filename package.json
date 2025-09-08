@@ -1,0 +1,28 @@
+{
+    "name": "docguard-monorepo",
+    "version": "0.1.0",
+    "private": true,
+    "description": "DocGuard - Documentation regression detection tool",
+    "scripts": {
+        "build": "pnpm run --recursive build",
+        "test": "pnpm run --recursive test",
+        "dev": "pnpm run build && pnpm run dev:cli",
+        "dev:cli": "node packages/cli/dist/index.js"
+    },
+    "workspaces": [
+        "packages/*"
+    ],
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "typescript": "^5.0.0"
+    },
+    "engines": {
+        "node": ">=16.0.0"
+    },
+    "author": "cpolive",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/cpolive/docguard.git"
+    }
+}
