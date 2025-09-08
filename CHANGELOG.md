@@ -1,3 +1,10 @@
+# [0.3.0-next.1](https://github.com/caiopizzol/docguard/compare/v0.3.0-next.0...v0.3.0-next.1) (2025-09-08)
+
+
+### Bug Fixes
+
+* next release tag ([ad99044](https://github.com/caiopizzol/docguard/commit/ad9904411802bef1e0eed610cf569637ffe948ad))
+
 # [0.2.0-next.2](https://github.com/caiopizzol/docguard/compare/v0.2.0-next.1...v0.2.0-next.2) (2025-09-08)
 
 ### Bug Fixes
