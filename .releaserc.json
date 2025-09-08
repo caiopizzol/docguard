@@ -2,7 +2,8 @@
   "branches": [
     {
       "name": "main",
-      "prerelease": "next"
+      "prerelease": "next",
+      "channel": "next"
     },
     {
       "name": "release/v+([0-9])?(.+([0-9]))",
