@@ -2,7 +2,8 @@ name: 📦 Release Stable
 
 on:
   push:
-    branches: ['release/**']
+    branches:
+      - 'release/*'
   workflow_dispatch:
 
 permissions:
