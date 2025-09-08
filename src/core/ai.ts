@@ -1,56 +1,38 @@
-import OpenAI from 'openai'
+import { createProvider } from './providers/base.js'
 
 export async function checkAnswerability(
   question: string,
   docs: string,
-  apiKey: string
-): Promise<any> {
-  const openai = new OpenAI({ apiKey })
+  apiKey: string,
+  provider = 'openai',
+  model?: string
+) {
+  const maxRetries = 3
+  let lastError: Error | null = null
 
-  const prompt = `You are a documentation validator. Given the documentation below, determine if it can answer the following question.
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const aiProvider = createProvider(provider, apiKey, model)
+      return await aiProvider.checkAnswerability(question, docs)
+    } catch (error: any) {
+      lastError = error
 
-Question: "${question}"
+      // Retry on rate limits with exponential backoff
+      if (error.status === 429 && attempt < maxRetries) {
+        const delay = Math.pow(2, attempt) * 1000
+        await new Promise((resolve) => setTimeout(resolve, delay))
+        continue
+      }
 
-Documentation:
-${docs.substring(0, 50000)} // Limit context to avoid token limits
-
-Analyze if someone reading this documentation could find the answer to the question.
-
-Respond in this exact format:
-ANSWER: [YES/PARTIAL/NO]
-REASON: [One sentence explanation]
-LOCATION: [Where the answer is found, or "Not found"]`
-
-  try {
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini', // Cheaper model for MVP
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.1, // Low temperature for consistency
-      max_tokens: 150,
-    })
-
-    const content = response.choices[0].message.content
-
-    if (!content) {
-      throw new Error('No response from OpenAI')
+      // Don't retry on other errors
+      break
     }
+  }
 
-    // Parse response
-    const answerMatch = content.match(/ANSWER:\s*(YES|PARTIAL|NO)/)
-    const reasonMatch = content.match(/REASON:\s*(.+)/)
-    const locationMatch = content.match(/LOCATION:\s*(.+)/)
-
-    return {
-      answerable: answerMatch ? answerMatch[1] : 'NO',
-      reason: reasonMatch ? reasonMatch[1] : 'Could not determine',
-      location: locationMatch ? locationMatch[1] : 'Not found',
-    }
-  } catch (error) {
-    console.error(`Failed to check question: ${(error as Error).message}`)
-    return {
-      answerable: 'ERROR',
-      reason: (error as Error).message,
-      location: 'N/A',
-    }
+  // Return error state instead of throwing
+  return {
+    answerable: 'ERROR' as const,
+    reason: lastError?.message || 'Unknown error',
+    location: 'N/A',
   }
 }

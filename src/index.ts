@@ -27,6 +27,11 @@ program
   .option('-c, --config <path>', 'Config file path', 'docguard.yml')
   .option('--no-cache', 'Disable caching')
   .option('--verbose', 'Show detailed output')
+  .option(
+    '--format <type>',
+    'Output format (terminal, json, github)',
+    'terminal'
+  )
   .action(check)
 
 program.parse()

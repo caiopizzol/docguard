@@ -1,5 +1,5 @@
-import { checkAnswerability } from './ai'
-import { getCached, setCached } from './cache'
+import { checkAnswerability } from './ai.js'
+import { getCached, setCached } from './cache.js'
 import crypto from 'crypto'
 
 export async function validateQuestions(

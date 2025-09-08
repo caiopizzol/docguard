@@ -7,6 +7,7 @@ export async function check(options: {
   config: string
   cache: boolean
   verbose: boolean
+  format?: string
 }): Promise<void> {
   try {
     // Load configuration
@@ -47,6 +48,42 @@ export async function check(options: {
       apiKey,
       options.cache !== false
     )
+
+    // Handle JSON output format
+    if (options.format === 'json') {
+      const allQuestions = [
+        ...(results.critical || []),
+        ...(results.important || []),
+        ...(results.nice_to_have || []),
+      ]
+
+      const exitCode = results.critical?.some((r: any) => r.answerable === 'NO')
+        ? 1
+        : 0
+
+      const output = {
+        version: '1.0.0',
+        timestamp: new Date().toISOString(),
+        summary: {
+          total: allQuestions.length,
+          passing: allQuestions.filter((q: any) => q.answerable === 'YES')
+            .length,
+          failing: allQuestions.filter((q: any) => q.answerable === 'NO')
+            .length,
+          partial: allQuestions.filter((q: any) => q.answerable === 'PARTIAL')
+            .length,
+        },
+        results: {
+          critical: results.critical || [],
+          important: results.important || [],
+          nice_to_have: results.nice_to_have || [],
+        },
+        exitCode,
+      }
+
+      console.log(JSON.stringify(output, null, 2))
+      process.exit(exitCode)
+    }
 
     // Report results
     const exitCode = report(results, options.verbose)
