@@ -8,7 +8,7 @@ on:
     inputs:
       branch:
         description: 'Release branch (e.g., release/v0.2)'
-        required: true
+        required: false
         type: string
 
 permissions:
@@ -26,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.branch }} || ${{ github.ref }}
+          ref: ${{ github.event.inputs.branch || github.ref }}
 
       - uses: pnpm/action-setup@v2
         with:
@@ -47,9 +47,6 @@ jobs:
       - name: Build
         run: pnpm build
 
-      # - name: Test
-      #   run: pnpm test
-
   release:
     needs: test
     runs-on: ubuntu-latest
@@ -57,6 +54,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event.inputs.branch || github.ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: pnpm/action-setup@v2
