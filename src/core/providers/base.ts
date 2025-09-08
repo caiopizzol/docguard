@@ -1,5 +1,5 @@
-import { OpenAIProvider } from './openai'
-import { AnthropicProvider } from './anthropic'
+import { OpenAIProvider } from './openai.js'
+import { AnthropicProvider } from './anthropic.js'
 
 export interface ValidationResult {
   answerable: 'YES' | 'PARTIAL' | 'NO' | 'ERROR'
