@@ -60,8 +60,8 @@ importers:
   packages/cli:
     dependencies:
       '@docguard/core':
-        specifier: workspace:*
-        version: link:../core
+        specifier: ^0.0.2
+        version: 0.0.2
       js-yaml:
         specifier: ^4.1.0
         version: 4.1.0
@@ -95,6 +95,10 @@ packages:
   '@colors/colors@1.5.0':
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
+
+  '@docguard/core@0.0.2':
+    resolution: {integrity: sha512-oX3wZ1MIr8Xkf+dFoIG0diISFtrbvWPy4vrYAnM9BjkdKPX2LAj+svD7qkUyaFNu6PBT+60cLQimFxmwxzyhSQ==}
+    engines: {node: '>=16.0.0'}
 
   '@eslint-community/eslint-utils@4.9.0':
     resolution: {integrity: sha512-ayVFHdtZ+hsq1t2Dy24wCmGXGe4q9Gu3smhLYALJrr473ZH27MsnSL+LKUlimp4BWJqMDMLmPpx/Q9R3OAlL4g==}
@@ -1768,6 +1772,8 @@ snapshots:
 
   '@colors/colors@1.5.0':
     optional: true
+
+  '@docguard/core@0.0.2': {}
 
   '@eslint-community/eslint-utils@4.9.0(eslint@9.35.0)':
     dependencies:
