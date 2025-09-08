@@ -89,6 +89,11 @@ jobs:
         run: |
           RELEASED_VERSION="${{ steps.get_version.outputs.released_version }}"
 
+          # Handle both "0.2" and "0.2.0" formats
+          if [[ "$RELEASED_VERSION" =~ ^[0-9]+\.[0-9]+$ ]]; then
+            RELEASED_VERSION="${RELEASED_VERSION}.0"
+          fi
+
           # Calculate next minor version
           IFS='.' read -r major minor patch <<< "$RELEASED_VERSION"
           NEXT_VERSION="$major.$((minor + 1)).0"
@@ -96,10 +101,17 @@ jobs:
           echo "Released: $RELEASED_VERSION"
           echo "Next version for main: $NEXT_VERSION-next.0"
 
-          # Update package.json
-          npm version "$NEXT_VERSION-next.0" --no-git-tag-version
+          # Get current version from package.json
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
 
-          # Commit and push
-          git add package.json
-          git commit -m "chore: bump version to $NEXT_VERSION-next.0 after $RELEASED_VERSION release [skip ci]"
-          git push origin main
+          if [ "$CURRENT_VERSION" == "$NEXT_VERSION-next.0" ]; then
+            echo "Version already set to $NEXT_VERSION-next.0, skipping update"
+          else
+            # Update package.json
+            npm version "$NEXT_VERSION-next.0" --no-git-tag-version
+            
+            # Commit and push
+            git add package.json
+            git commit -m "chore: bump version to $NEXT_VERSION-next.0 after $RELEASED_VERSION release [skip ci]"
+            git push origin main
+          fi
