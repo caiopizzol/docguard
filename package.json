@@ -12,7 +12,7 @@
     "format:check": "prettier --check .",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
-    "type-check": "pnpm -r run type-check",
+    "type-check": "pnpm build && pnpm -r run type-check",
     "check:all": "pnpm run build && pnpm run format:check && pnpm run lint && pnpm run type-check"
   },
   "workspaces": [
