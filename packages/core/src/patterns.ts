@@ -29,7 +29,7 @@ export const defaultPatterns: PatternSet = {
         'quota',
         'limit exceeded',
       ],
-      regex: /\d+\s*requests?/i,
+      regex: /\d+\s*requests?\s*per\s*(second|minute|hour|day)/i,
       severity: 'warning',
     },
   ],

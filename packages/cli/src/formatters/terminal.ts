@@ -11,8 +11,10 @@ export class TerminalFormatter {
 
     for (const result of results) {
       // Simple, direct format - no emojis
+      const lineNumber = result.removals[0]?.line
+      const formattedLine = lineNumber ? lineNumber.toString() : 'unknown'
       output.push(
-        `✗ ${this.formatCategory(result.category)} removed from ${result.file}:${result.removals[0]?.line || '?'}`
+        `✗ ${this.formatCategory(result.category)} removed from ${result.file}:${formattedLine}`
       )
 
       if (result.removals.length > 0) {
