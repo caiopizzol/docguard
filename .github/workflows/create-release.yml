@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Release version (e.g., 0.2, 1.0)'
-        required: true
+        description: 'Release version (leave empty for auto-increment)'
+        required: false
         type: string
 
 permissions:
@@ -25,13 +25,30 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+      - name: Determine version
+        id: version
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            # Get current version from package.json
+            CURRENT=$(node -p "require('./package.json').version")
+            # Remove prerelease suffix if present (e.g., 0.2.0-next.1 -> 0.2.0)
+            BASE_VERSION=${CURRENT%%-*}
+            # Extract major.minor
+            IFS='.' read -r major minor patch <<< "$BASE_VERSION"
+            VERSION="$major.$minor"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Using version: $VERSION"
+
       - name: Create release branch
         run: |
-          BRANCH="release/v${{ inputs.version }}"
+          BRANCH="release/v${{ steps.version.outputs.version }}"
           git checkout -b "$BRANCH"
 
           # Add empty commit to trigger release workflow
-          git commit --allow-empty -m "chore: initialize release branch v${{ inputs.version }}.x"
+          git commit --allow-empty -m "chore: initialize release branch v${{ steps.version.outputs.version }}"
 
           git push origin "$BRANCH"
 

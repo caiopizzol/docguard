@@ -74,9 +74,19 @@ jobs:
       - name: Build packages
         run: pnpm build
 
+      - name: Debug branch info
+        run: |
+          echo "Current branch: $(git branch --show-current)"
+          echo "All branches:"
+          git branch -a
+          echo "Git status:"
+          git status
+
       - name: Release to latest channel
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
+        run: |
+          echo "Running semantic-release on branch: $(git branch --show-current)"
+          npx semantic-release --debug
