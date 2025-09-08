@@ -1,0 +1,48 @@
+name: Bump Main Version After Stable Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  bump-version:
+    # Only run for stable releases (not prereleases)
+    if: '!github.event.release.prerelease'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump to next minor version
+        run: |
+          # Get the released version (e.g., 1.0.0)
+          RELEASED_VERSION="${{ github.event.release.tag_name }}"
+          RELEASED_VERSION="${RELEASED_VERSION#v}" # Remove 'v' prefix if present
+
+          # Calculate next minor version (e.g., 1.1.0)
+          IFS='.' read -r major minor patch <<< "$RELEASED_VERSION"
+          NEXT_VERSION="$major.$((minor + 1)).0"
+
+          echo "Released: $RELEASED_VERSION"
+          echo "Next version for main: $NEXT_VERSION-next.0"
+
+          # Update package.json
+          npm version "$NEXT_VERSION-next.0" --no-git-tag-version
+
+          # Commit and push
+          git add package.json
+          git commit -m "chore: bump version to $NEXT_VERSION-next.0 after $RELEASED_VERSION release [skip ci]"
+          git push origin main
