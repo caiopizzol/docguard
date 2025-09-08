@@ -1,3 +1,10 @@
+# [0.2.0-next.1](https://github.com/caiopizzol/docguard/compare/v0.1.1-next.1...v0.2.0-next.1) (2025-09-08)
+
+
+### Features
+
+* update default models for Anthropic and OpenAI providers ([29ce57b](https://github.com/caiopizzol/docguard/commit/29ce57bb2c3bc4c156060ce130e519e0b2e9a3f8))
+
 ## [0.1.1-next.1](https://github.com/caiopizzol/docguard/compare/v0.1.0...v0.1.1-next.1) (2025-09-08)
 
 
