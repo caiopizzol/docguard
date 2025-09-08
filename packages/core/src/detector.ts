@@ -209,6 +209,10 @@ export class Detector {
    * Check if two terms should be considered the same
    */
   private termsMatch(term1: string, term2: string): boolean {
+    // Handle null/undefined inputs safely
+    if (!term1 || !term2) {
+      return false
+    }
     return term1.toLowerCase().trim() === term2.toLowerCase().trim()
   }
 

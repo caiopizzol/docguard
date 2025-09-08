@@ -70,20 +70,23 @@ export class CheckCommand {
         return 0 // Success
       }
     } catch (error) {
-      console.error('✗ DocGuard check failed\n')
+      console.error('✗ DocGuard check failed')
 
       if (error instanceof Error) {
         if (error.message.includes('Not a git repository')) {
-          console.error('  DocGuard needs a git repository to compare changes.')
-          console.error('  Initialize with: git init')
           console.error(
-            '  Or check specific files: docguard check docs/ --no-git'
+            '\n  Error: DocGuard needs a git repository to compare changes.'
           )
+          console.error('  Suggestion: Initialize with "git init"')
+          console.error(
+            '  Alternative: Check specific files with "--no-git" flag'
+          )
+          console.error('  Example: docguard check docs/ --no-git')
         } else {
-          console.error(`  ${error.message}`)
+          console.error(`\n  Error: ${error.message}`)
         }
       } else {
-        console.error('  An unexpected error occurred')
+        console.error('\n  Error: An unexpected error occurred')
       }
 
       return 3 // Error
