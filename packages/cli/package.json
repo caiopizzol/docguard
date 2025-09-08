@@ -1,6 +1,6 @@
 {
   "name": "docguard",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Documentation regression detection CLI tool",
   "main": "dist/index.js",
   "bin": {
@@ -14,7 +14,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@docguard/core": "workspace:*",
+    "@docguard/core": "^0.0.1",
     "js-yaml": "^4.1.0"
   },
   "devDependencies": {
