@@ -10,3 +10,4 @@ export interface DocGuardConfig {
   docs_path?: string
   cache_ttl?: number
 }
+//*
