@@ -29,7 +29,18 @@ jobs:
         run: |
           BRANCH="release/v${{ inputs.version }}"
           git checkout -b "$BRANCH"
-
-          # Create an empty commit to trigger the workflow
-          git commit --allow-empty -m "chore: initialize release branch v${{ inputs.version }}"
           git push origin "$BRANCH"
+          echo "✅ Created $BRANCH from main"
+          echo ""
+          echo "The stable release will be triggered automatically when changes are pushed to this branch."
+
+      - name: Trigger release workflow
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'release-stable.yml',
+              ref: 'release/v${{ inputs.version }}'
+            })
