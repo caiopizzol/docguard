@@ -3,6 +3,7 @@ name: Bump Main Version
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 jobs:
   bump-version:
