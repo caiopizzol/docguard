@@ -1,3 +1,10 @@
+# [0.2.0-next.2](https://github.com/caiopizzol/docguard/compare/v0.2.0-next.1...v0.2.0-next.2) (2025-09-08)
+
+
+### Bug Fixes
+
+* correct comment formatting in cache.ts ([c983103](https://github.com/caiopizzol/docguard/commit/c983103821d7d2a0c4136319a5e6f3ffb4a4b811))
+
 # [0.2.0-next.1](https://github.com/caiopizzol/docguard/compare/v0.1.0...v0.2.0-next.1) (2025-09-08)
 
 
