@@ -5,6 +5,11 @@ on:
     branches:
       - 'release/*'
   workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Release branch (e.g., release/v0.2)'
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -20,6 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }} || ${{ github.ref }}
 
       - uses: pnpm/action-setup@v2
         with:
