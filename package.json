@@ -13,14 +13,14 @@
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "type-check": "pnpm -r run type-check",
-    "check:all": "pnpm run build && pnpm run format:check && pnpm run lint && pnpm run type-check",
-    "prepare": "husky install"
+    "check:all": "pnpm run build && pnpm run format:check && pnpm run lint && pnpm run type-check"
   },
   "workspaces": [
     "packages/*"
   ],
   "devDependencies": {
     "@eslint/js": "^9.35.0",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^8.42.0",
     "@typescript-eslint/parser": "^8.42.0",
