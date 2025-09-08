@@ -1,44 +1,45 @@
 {
-    "name": "docguard",
-    "version": "0.1.0",
-    "description": "Documentation regression detection CLI tool",
-    "main": "dist/index.js",
-    "bin": {
-        "docguard": "./dist/index.js"
-    },
-    "scripts": {
-        "build": "tsc",
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "dev": "tsc --watch",
-        "prepublishOnly": "npm run build"
-    },
-    "dependencies": {
-        "@docguard/core": "workspace:*",
-        "js-yaml": "^4.1.0"
-    },
-    "devDependencies": {
-        "@types/node": "^20.0.0",
-        "typescript": "^5.0.0"
-    },
-    "files": [
-        "dist"
-    ],
-    "engines": {
-        "node": ">=16.0.0"
-    },
-    "keywords": [
-        "documentation",
-        "regression",
-        "testing",
-        "ci",
-        "api-docs"
-    ],
-    "author": "caiopizzol",
-    "license": "MIT",
-    "homepage": "https://github.com/caiopizzol/docguard",
-    "bugs": "https://github.com/caiopizzol/docguard/issues",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/caiopizzol/docguard.git"
-    }
+  "name": "docguard",
+  "version": "0.1.0",
+  "description": "Documentation regression detection CLI tool",
+  "main": "dist/index.js",
+  "bin": {
+    "docguard": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@docguard/core": "workspace:*",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "keywords": [
+    "documentation",
+    "regression",
+    "testing",
+    "ci",
+    "api-docs"
+  ],
+  "author": "caiopizzol",
+  "license": "MIT",
+  "homepage": "https://github.com/caiopizzol/docguard",
+  "bugs": "https://github.com/caiopizzol/docguard/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/caiopizzol/docguard.git"
+  }
 }

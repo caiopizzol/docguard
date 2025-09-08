@@ -1,28 +1,53 @@
 {
-    "name": "docguard-monorepo",
-    "version": "0.1.0",
-    "private": true,
-    "description": "DocGuard - Documentation regression detection tool",
-    "scripts": {
-        "build": "pnpm run --recursive build",
-        "test": "pnpm run --recursive test",
-        "dev": "pnpm run build && pnpm run dev:cli",
-        "dev:cli": "node packages/cli/dist/index.js"
-    },
-    "workspaces": [
-        "packages/*"
+  "name": "docguard-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "DocGuard - Documentation regression detection tool",
+  "scripts": {
+    "build": "pnpm run --recursive build",
+    "test": "pnpm run --recursive test",
+    "dev": "pnpm run build && pnpm run dev:cli",
+    "dev:cli": "node packages/cli/dist/index.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "type-check": "pnpm -r run type-check",
+    "check:all": "pnpm run build && pnpm run format:check && pnpm run lint && pnpm run type-check",
+    "prepare": "husky install"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@eslint/js": "^9.35.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.42.0",
+    "@typescript-eslint/parser": "^8.42.0",
+    "eslint": "^9.35.0",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.6",
+    "prettier": "^3.6.2",
+    "typescript": "^5.0.0",
+    "typescript-eslint": "^8.42.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
     ],
-    "devDependencies": {
-        "@types/node": "^20.0.0",
-        "typescript": "^5.0.0"
-    },
-    "engines": {
-        "node": ">=16.0.0"
-    },
-    "author": "caiopizzol",
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/caiopizzol/docguard.git"
-    }
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "author": "caiopizzol",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/caiopizzol/docguard.git"
+  }
 }
