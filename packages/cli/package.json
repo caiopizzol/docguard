@@ -14,7 +14,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@docguard/core": "^0.0.1",
+    "@docguard/core": "0.0.2",
     "js-yaml": "^4.1.0"
   },
   "devDependencies": {
@@ -40,7 +40,8 @@
   "bugs": "https://github.com/caiopizzol/docguard/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/caiopizzol/docguard.git"
+    "url": "https://github.com/caiopizzol/docguard.git",
+    "directory": "packages/cli"
   },
   "publishConfig": {
     "access": "public"
