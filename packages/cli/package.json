@@ -33,12 +33,12 @@
         "ci",
         "api-docs"
     ],
-    "author": "cpolive",
+    "author": "caiopizzol",
     "license": "MIT",
-    "homepage": "https://github.com/cpolive/docguard",
-    "bugs": "https://github.com/cpolive/docguard/issues",
+    "homepage": "https://github.com/caiopizzol/docguard",
+    "bugs": "https://github.com/caiopizzol/docguard/issues",
     "repository": {
         "type": "git",
-        "url": "https://github.com/cpolive/docguard.git"
+        "url": "https://github.com/caiopizzol/docguard.git"
     }
 }
