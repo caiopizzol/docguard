@@ -13,7 +13,8 @@
         "prepublishOnly": "npm run build"
     },
     "dependencies": {
-        "@docguard/core": "workspace:*"
+        "@docguard/core": "workspace:*",
+        "js-yaml": "^4.1.0"
     },
     "devDependencies": {
         "@types/node": "^20.0.0",
@@ -28,13 +29,14 @@
     "keywords": [
         "documentation",
         "regression",
-        "cli",
-        "git",
-        "docs",
-        "markdown"
+        "testing",
+        "ci",
+        "api-docs"
     ],
     "author": "cpolive",
     "license": "MIT",
+    "homepage": "https://github.com/cpolive/docguard",
+    "bugs": "https://github.com/cpolive/docguard/issues",
     "repository": {
         "type": "git",
         "url": "https://github.com/cpolive/docguard.git"

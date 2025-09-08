@@ -1,6 +1,7 @@
 // Git diff analysis for DocGuard
 import { execSync } from 'child_process';
 import { existsSync, readFileSync } from 'fs';
+import { readFile, readdir, stat } from 'fs/promises';
 import path from 'path';
 import { FileChange } from './types';
 
@@ -111,7 +112,7 @@ export class GitDiffer {
         const changes: FileChange[] = [];
 
         try {
-            const files = this.findDocFiles(this.basePath);
+            const files = await this.findDocFiles(this.basePath);
 
             for (const file of files) {
                 const relativePath = path.relative(this.basePath, file);
@@ -133,20 +134,25 @@ export class GitDiffer {
     /**
      * Recursively find documentation files
      */
-    private findDocFiles(dir: string): string[] {
-        const fs = require('fs');
+    private async findDocFiles(dir: string): Promise<string[]> {
         const files: string[] = [];
 
         try {
-            const entries = fs.readdirSync(dir);
+            const entries = await readdir(dir);
 
-            for (const entry of entries) {
-                const fullPath = path.join(dir, entry);
-                const stat = fs.statSync(fullPath);
+            // Use Promise.all for parallel processing
+            const stats = await Promise.all(
+                entries.map(async entry => {
+                    const fullPath = path.join(dir, entry);
+                    const fileStat = await stat(fullPath);
+                    return { entry, fullPath, isDirectory: fileStat.isDirectory() };
+                })
+            );
 
-                if (stat.isDirectory() && !this.shouldIgnoreDirectory(entry)) {
-                    files.push(...this.findDocFiles(fullPath));
-                } else if (stat.isFile() && this.isDocumentationFile(entry)) {
+            for (const { entry, fullPath, isDirectory } of stats) {
+                if (isDirectory && !this.shouldIgnoreDirectory(entry)) {
+                    files.push(...await this.findDocFiles(fullPath));
+                } else if (!isDirectory && this.isDocumentationFile(entry)) {
                     files.push(fullPath);
                 }
             }

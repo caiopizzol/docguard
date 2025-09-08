@@ -1,21 +1,21 @@
 // Check command for DocGuard CLI
 import { Detector, GitDiffer, FileChange } from '@docguard/core';
 import { TerminalFormatter } from '../formatters/terminal';
+import { JSONFormatter } from '../formatters/json';
 import path from 'path';
 
 export interface CheckOptions {
     path?: string;
     baseCommit?: string;
     noGit?: boolean;
+    format?: 'terminal' | 'json';
 }
 
 export class CheckCommand {
     private detector: Detector;
-    private formatter: TerminalFormatter;
 
     constructor() {
         this.detector = new Detector();
-        this.formatter = new TerminalFormatter();
     }
 
     /**
@@ -49,7 +49,8 @@ export class CheckCommand {
             const results = this.detector.detect(changes);
 
             // Format and display results
-            const output = this.formatter.format(results);
+            const formatter = options.format === 'json' ? new JSONFormatter() : new TerminalFormatter();
+            const output = formatter.format(results);
             console.log(output);
 
             // Return exit code based on severity
