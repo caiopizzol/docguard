@@ -58,20 +58,31 @@ jobs:
           # Fetch all tags and branches
           git fetch --all --tags
 
+          # Handle both "0.2" and "0.2.0" formats
+          if [[ "$RELEASED_VERSION" =~ ^[0-9]+\.[0-9]+$ ]]; then
+            # If version is like "0.2", append ".0"
+            FULL_VERSION="${RELEASED_VERSION}.0"
+          else
+            # Already has patch version
+            FULL_VERSION="$RELEASED_VERSION"
+          fi
+
           # Check if the tag exists
-          if git rev-parse "v$RELEASED_VERSION" >/dev/null 2>&1; then
-            echo "Tag v$RELEASED_VERSION exists"
+          if git rev-parse "v$FULL_VERSION" >/dev/null 2>&1; then
+            echo "Tag v$FULL_VERSION exists"
             
             # Get the commit hash of the tag
-            TAG_COMMIT=$(git rev-list -n 1 v$RELEASED_VERSION)
+            TAG_COMMIT=$(git rev-list -n 1 v$FULL_VERSION)
             
             # Merge the tag commit into main
             # Using 'ours' strategy to keep main's content but make the tag reachable
-            git merge $TAG_COMMIT --strategy=ours --no-edit -m "chore: merge v$RELEASED_VERSION tag into main [skip ci]"
+            git merge $TAG_COMMIT --strategy=ours --no-edit -m "chore: merge v$FULL_VERSION tag into main [skip ci]"
             
-            echo "Merged tag v$RELEASED_VERSION into main's history"
+            echo "Merged tag v$FULL_VERSION into main's history"
           else
-            echo "Warning: Tag v$RELEASED_VERSION not found"
+            echo "Warning: Tag v$FULL_VERSION not found"
+            echo "Available tags:"
+            git tag -l "v*"
           fi
 
       - name: Bump to next minor version
