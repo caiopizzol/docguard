@@ -105,13 +105,23 @@ jobs:
           CURRENT_VERSION=$(node -p "require('./package.json').version")
 
           if [ "$CURRENT_VERSION" == "$NEXT_VERSION-next.0" ]; then
-            echo "Version already set to $NEXT_VERSION-next.0, skipping update"
+            echo "Version already set to $NEXT_VERSION-next.0"
+            
+            # Create the initial tag if it doesn't exist
+            if ! git rev-parse "v$NEXT_VERSION-next.0" >/dev/null 2>&1; then
+              echo "Creating initial tag v$NEXT_VERSION-next.0"
+              git tag "v$NEXT_VERSION-next.0"
+              git push origin "v$NEXT_VERSION-next.0"
+            fi
           else
             # Update package.json
             npm version "$NEXT_VERSION-next.0" --no-git-tag-version
             
+            # Create the initial tag
+            git tag "v$NEXT_VERSION-next.0"
+            
             # Commit and push
             git add package.json
             git commit -m "chore: bump version to $NEXT_VERSION-next.0 after $RELEASED_VERSION release [skip ci]"
-            git push origin main
+            git push origin main --tags
           fi
