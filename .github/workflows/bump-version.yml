@@ -53,17 +53,25 @@ jobs:
 
       - name: Fetch and merge release tag
         run: |
-          # Fetch all tags
-          git fetch --tags
-
-          # Create a temporary tag on main pointing to the release
-          # This ensures semantic-release sees it in main's history
           RELEASED_VERSION="${{ steps.get_version.outputs.released_version }}"
 
-          # Cherry-pick the release commit if it exists
+          # Fetch all tags and branches
+          git fetch --all --tags
+
+          # Check if the tag exists
           if git rev-parse "v$RELEASED_VERSION" >/dev/null 2>&1; then
-            echo "Tag v$RELEASED_VERSION exists, ensuring it's in main's history"
-            # We don't actually merge, just ensure the tag is visible
+            echo "Tag v$RELEASED_VERSION exists"
+            
+            # Get the commit hash of the tag
+            TAG_COMMIT=$(git rev-list -n 1 v$RELEASED_VERSION)
+            
+            # Merge the tag commit into main
+            # Using 'ours' strategy to keep main's content but make the tag reachable
+            git merge $TAG_COMMIT --strategy=ours --no-edit -m "chore: merge v$RELEASED_VERSION tag into main [skip ci]"
+            
+            echo "Merged tag v$RELEASED_VERSION into main's history"
+          else
+            echo "Warning: Tag v$RELEASED_VERSION not found"
           fi
 
       - name: Bump to next minor version
