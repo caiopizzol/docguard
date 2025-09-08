@@ -1,5 +1,5 @@
 // Init command for DocGuard CLI
-import { writeFileSync } from 'fs';
+import { writeFileSync } from 'fs'
 
 const DEFAULT_CONFIG = `# DocGuard configuration
 version: 1
@@ -19,11 +19,11 @@ watch:
 
 # ignore:
 #   - CHANGELOG.md
-`;
+`
 
 export class InitCommand {
-    execute(): void {
-        writeFileSync('docguard.yml', DEFAULT_CONFIG);
-        console.log('Created docguard.yml');
-    }
+  execute(): void {
+    writeFileSync('docguard.yml', DEFAULT_CONFIG)
+    console.log('Created docguard.yml')
+  }
 }
