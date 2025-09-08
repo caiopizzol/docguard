@@ -13,7 +13,7 @@ on:
 jobs:
   bump-version:
     # Only run for stable releases (not prereleases) or manual trigger
-    if: '!github.event.release.prerelease || github.event_name == "workflow_dispatch"'
+    if: "!github.event.release.prerelease || github.event_name == 'workflow_dispatch'"
     runs-on: ubuntu-latest
 
     steps:
