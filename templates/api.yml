@@ -1,0 +1,24 @@
+# DocGuard Configuration for API Documentation
+
+questions:
+  critical:
+    - How do I authenticate with the API?
+    - What are the API endpoints?
+    - How do I handle errors?
+    - What are the rate limits?
+    - Where can I find the API reference?
+
+  important:
+    - How do I paginate results?
+    - What are the response formats?
+    - How do I filter results?
+    - Are there SDK libraries available?
+    - How do I get an API key?
+
+  nice_to_have:
+    - Are there webhooks available?
+    - How do I test the API?
+    - What's the API versioning strategy?
+    - Are there usage examples?
+
+model: gpt-4o-mini

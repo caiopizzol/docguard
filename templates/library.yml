@@ -1,0 +1,23 @@
+# DocGuard Configuration for Libraries/Packages
+
+questions:
+  critical:
+    - How do I install this library?
+    - How do I import and use this library?
+    - What's a basic usage example?
+    - What are the main functions/methods?
+
+  important:
+    - Does it work with TypeScript?
+    - What are the dependencies?
+    - How do I configure options?
+    - What versions are supported?
+    - How do I handle errors?
+
+  nice_to_have:
+    - How do I run tests?
+    - How do I contribute?
+    - What's the performance impact?
+    - Are there known limitations?
+
+model: gpt-4o-mini

@@ -1,23 +1,31 @@
 {
-  "name": "docguard-monorepo",
-  "version": "0.0.1",
-  "private": true,
-  "description": "DocGuard - Documentation regression detection tool",
+  "name": "docguard",
+  "version": "0.1.0",
+  "description": "Ensure your docs answer critical questions",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "docguard": "./dist/index.js"
+  },
   "scripts": {
-    "build": "pnpm run --recursive build",
-    "test": "pnpm -r run test",
-    "dev": "pnpm run build && pnpm run dev:cli",
-    "dev:cli": "node packages/cli/dist/index.js",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
-    "type-check": "pnpm build && pnpm -r run type-check",
+    "type-check": "tsc --noEmit",
     "check:all": "pnpm run build && pnpm run format && pnpm run lint && pnpm run type-check"
   },
-  "workspaces": [
-    "packages/*"
-  ],
+  "dependencies": {
+    "chalk": "^5.0.0",
+    "commander": "^11.0.0",
+    "glob": "^10.0.0",
+    "openai": "^4.0.0",
+    "yaml": "^2.0.0"
+  },
   "devDependencies": {
     "@eslint/js": "^9.35.0",
     "@semantic-release/changelog": "^6.0.3",
@@ -31,11 +39,16 @@
     "eslint-config-prettier": "^10.1.8",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.6",
+    "node": "link:@@types/node",
     "prettier": "^3.6.2",
     "semantic-release": "^24.2.7",
     "typescript": "^5.0.0",
     "typescript-eslint": "^8.42.0"
   },
+  "files": [
+    "dist",
+    "templates"
+  ],
   "engines": {
     "node": ">=16.0.0"
   },
@@ -48,10 +61,23 @@
       "prettier --write"
     ]
   },
+  "keywords": [
+    "documentation",
+    "regression",
+    "testing",
+    "ci",
+    "api-docs"
+  ],
   "author": "caiopizzol",
   "license": "MIT",
+  "homepage": "https://github.com/caiopizzol/docguard",
+  "bugs": "https://github.com/caiopizzol/docguard/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/caiopizzol/docguard.git"
+    "url": "https://github.com/caiopizzol/docguard.git",
+    "directory": "packages/cli"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
