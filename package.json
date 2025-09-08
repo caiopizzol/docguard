@@ -5,7 +5,7 @@
   "description": "DocGuard - Documentation regression detection tool",
   "scripts": {
     "build": "pnpm run --recursive build",
-    "test": "pnpm run --recursive test",
+    "test": "pnpm -r run test",
     "dev": "pnpm run build && pnpm run dev:cli",
     "dev:cli": "node packages/cli/dist/index.js",
     "format": "prettier --write .",
@@ -20,6 +20,9 @@
   ],
   "devDependencies": {
     "@eslint/js": "^9.35.0",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/exec": "^7.1.0",
+    "@semantic-release/git": "^10.0.1",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^8.42.0",
@@ -29,6 +32,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.1.6",
     "prettier": "^3.6.2",
+    "semantic-release": "^24.2.7",
     "typescript": "^5.0.0",
     "typescript-eslint": "^8.42.0"
   },
