@@ -8,7 +8,7 @@ on:
       - '*.x' # Maintenance branches
     paths-ignore:
       - '**.md'
-      - '.github/workflows/pr-*.yml'
+      - '.github/workflows/*.yml'
   workflow_dispatch:
 
 permissions:
