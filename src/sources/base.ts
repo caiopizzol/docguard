@@ -1,6 +1,6 @@
-import { DocSource, DocGuardConfig } from '../types/config.js'
+import { DocSource, DocWorksConfig } from '../types/config.js'
 
-export async function createSource(config: DocGuardConfig): Promise<DocSource> {
+export async function createSource(config: DocWorksConfig): Promise<DocSource> {
   const sourceConfig =
     typeof config.source === 'string'
       ? { type: 'llms.txt' as const, path: config.source }

@@ -1,4 +1,4 @@
-# DocGuard Configuration - Mintlify
+# DocWorks Configuration - Mintlify
 source:
   type: mcp
   server: '@mintlify/mcp-server'

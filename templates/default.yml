@@ -1,4 +1,4 @@
-# DocGuard Configuration
+# DocWorks Configuration
 source: ./llms.txt
 
 journeys:

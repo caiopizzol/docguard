@@ -3,7 +3,7 @@ import path from 'path'
 import { glob } from 'glob'
 
 const TEMPLATES = {
-  default: `# DocGuard Configuration
+  default: `# DocWorks Configuration
 source: ./llms.txt
 
 journeys:
@@ -20,7 +20,7 @@ journeys:
 provider: openai
 model: gpt-4o-mini`,
 
-  api: `# DocGuard Configuration - API Documentation
+  api: `# DocWorks Configuration - API Documentation
 source: ./llms.txt
 
 journeys:
@@ -42,7 +42,7 @@ journeys:
 provider: openai
 model: gpt-4o-mini`,
 
-  library: `# DocGuard Configuration - Library/Package
+  library: `# DocWorks Configuration - Library/Package
 source: ./llms.txt
 
 journeys:
@@ -64,7 +64,7 @@ journeys:
 provider: openai
 model: gpt-4o-mini`,
 
-  mintlify: `# DocGuard Configuration - Mintlify
+  mintlify: `# DocWorks Configuration - Mintlify
 source:
   type: mcp
   server: "@mintlify/mcp-server"
@@ -83,7 +83,7 @@ journeys:
 provider: openai
 model: gpt-4o-mini`,
 
-  readme: `# DocGuard Configuration - ReadMe
+  readme: `# DocWorks Configuration - ReadMe
 source:
   type: mcp
   server: "@readme/mcp-server"
@@ -97,7 +97,7 @@ journeys:
 provider: openai
 model: gpt-4o-mini`,
 
-  gitbook: `# DocGuard Configuration - GitBook
+  gitbook: `# DocWorks Configuration - GitBook
 source:
   type: mcp
   server: "@gitbook/mcp-server"
@@ -116,11 +116,11 @@ export async function init(options: {
   template?: string
   platform?: string
 }): Promise<void> {
-  console.log('🚀 Initializing DocGuard...\n')
+  console.log('🚀 Initializing DocWorks...\n')
 
   // Check existing config
-  if (fs.existsSync('docguard.yml')) {
-    console.log('⚠️  docguard.yml already exists')
+  if (fs.existsSync('docworks.yml')) {
+    console.log('⚠️  docworks.yml already exists')
     process.exit(1)
   }
 
@@ -140,8 +140,8 @@ export async function init(options: {
   }
 
   // Write config
-  fs.writeFileSync('docguard.yml', template)
-  console.log('✅ Created docguard.yml\n')
+  fs.writeFileSync('docworks.yml', template)
+  console.log('✅ Created docworks.yml\n')
 
   // Next steps
   console.log('Next steps:')
@@ -151,7 +151,7 @@ export async function init(options: {
   console.log('2. Set your API key:')
   console.log('   export OPENAI_API_KEY=sk-...')
   console.log('3. Run validation:')
-  console.log('   docguard check')
+  console.log('   docworks check')
 }
 
 async function createLLMSTxt(): Promise<void> {
@@ -169,7 +169,7 @@ async function createLLMSTxt(): Promise<void> {
   }
 
   const content = [
-    '# Documentation sources for DocGuard',
+    '# Documentation sources for DocWorks',
     '# Add your documentation files below, one per line',
     '# Lines starting with # are comments',
     '',

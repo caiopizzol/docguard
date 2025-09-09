@@ -1,4 +1,4 @@
-export interface DocGuardConfig {
+export interface DocWorksConfig {
   source: string | SourceConfig
   journeys: Record<string, string[]>
   provider?: 'openai' | 'anthropic'

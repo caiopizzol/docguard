@@ -1,4 +1,4 @@
-# DocGuard Configuration - GitBook
+# DocWorks Configuration - GitBook
 source:
   type: mcp
   server: '@gitbook/mcp-server'
