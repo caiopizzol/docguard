@@ -55,4 +55,4 @@ export function formatGitHubComment(results: ValidationResults): string {
 
   return comment
 }
-//**
+//*
