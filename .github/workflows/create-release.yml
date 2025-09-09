@@ -39,37 +39,26 @@ jobs:
             IFS='.' read -r major minor patch <<< "$BASE_VERSION"
             VERSION="$major.$minor"
           fi
-
-          # Also determine the full version for package.json
-          FULL_VERSION="${VERSION}.0"
-          if [[ "$VERSION" =~ \. ]]; then
-            # If version already has dots, use as-is
-            FULL_VERSION="$VERSION"
-          fi
-
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "full_version=$FULL_VERSION" >> $GITHUB_OUTPUT
-          echo "Using version: $VERSION (full: $FULL_VERSION)"
+          echo "Using version: $VERSION"
 
       - name: Create release branch
         run: |
           BRANCH="release/v${{ steps.version.outputs.version }}"
-          FULL_VERSION="${{ steps.version.outputs.full_version }}"
-
-          # Fetch all tags to ensure we have the latest
-          git fetch --all --tags
-
-          # Create branch from main
           git checkout -b "$BRANCH"
 
-          # Update package.json to the target version
-          npm version $FULL_VERSION --no-git-tag-version --allow-same-version
+          # Get the full version from package.json and clean it
+          CURRENT=$(node -p "require('./package.json').version")
+          BASE_VERSION=${CURRENT%%-*}  # Remove -next.X suffix
 
-          # Create a marker commit that semantic-release will use as base
+          # Update package.json to the clean version (e.g., 0.3.0)
+          npm version $BASE_VERSION --no-git-tag-version --allow-same-version
+
+          # Commit the cleaned version
           git add package.json
-          git commit -m "chore: initialize release branch for v$FULL_VERSION"
+          git commit -m "chore: prepare stable release v$BASE_VERSION"
 
           git push origin "$BRANCH"
 
-          echo "✅ Created $BRANCH from main with version $FULL_VERSION"
+          echo "✅ Created $BRANCH from main with version $BASE_VERSION"
           echo "The stable release workflow will trigger automatically."
