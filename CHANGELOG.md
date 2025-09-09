@@ -1,3 +1,10 @@
+# [0.3.0-next.4](https://github.com/caiopizzol/docguard/compare/v0.3.0-next.3...v0.3.0-next.4) (2025-09-09)
+
+
+### Bug Fixes
+
+* test ([e83b622](https://github.com/caiopizzol/docguard/commit/e83b622fe27774cba42f0abbf95f77defdc115e9))
+
 # [0.3.0-next.3](https://github.com/caiopizzol/docguard/compare/v0.3.0-next.2...v0.3.0-next.3) (2025-09-09)
 
 ### Bug Fixes

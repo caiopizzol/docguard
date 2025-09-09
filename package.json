@@ -1,6 +1,6 @@
 {
   "name": "docguard",
-  "version": "0.3.0-next.3",
+  "version": "0.3.0-next.4",
   "description": "Ensure your docs answer critical questions",
   "type": "module",
   "main": "dist/index.js",
