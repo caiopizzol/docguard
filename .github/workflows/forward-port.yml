@@ -1,0 +1,64 @@
+name: 🔄 Forward Port Patches
+
+on:
+  push:
+    branches:
+      - '*.x' # Maintenance branches
+    tags:
+      - 'v*.*.*' # When a new version is tagged
+
+jobs:
+  forward-port:
+    # Only run after a release (check for version tag)
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create forward-port PR
+        run: |
+          # Get the version that was just released
+          VERSION=${GITHUB_REF#refs/tags/v}
+
+          # Get the commit that was tagged
+          COMMIT=$(git rev-list -n 1 $GITHUB_REF)
+
+          # Create branch for the forward-port
+          BRANCH="forward-port/${VERSION}"
+          git checkout main
+          git checkout -b $BRANCH
+
+          # Cherry-pick the fix commit (the one before the release commit)
+          # Skip the release commit itself (has [skip ci])
+          LAST_FIX=$(git log $COMMIT --format=%H --grep='\[skip ci\]' --invert-grep -n 1)
+
+          if [ -n "$LAST_FIX" ]; then
+            git cherry-pick $LAST_FIX || {
+              # If cherry-pick fails, create PR anyway with conflict info
+              echo "Cherry-pick had conflicts, manual resolution needed"
+            }
+            
+            git push origin $BRANCH
+            
+            # Create PR using GitHub CLI
+            gh pr create \
+              --base main \
+              --head $BRANCH \
+              --title "🔄 Forward-port fix from v${VERSION}" \
+              --body "Automatically forward-porting fix from v${VERSION} to main.
+              
+              If there are conflicts, please resolve them manually.
+              
+              Original fix: $LAST_FIX" \
+              --label "forward-port"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
