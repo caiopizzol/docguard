@@ -1,3 +1,5 @@
+/* eslint-env node */
+
 const branch = process.env.GITHUB_REF_NAME || process.env.CI_COMMIT_BRANCH
 
 const config = {
@@ -39,14 +41,10 @@ if (!isPrerelease) {
     },
   ])
 }
+
 // Always add npm and github plugins
 config.plugins.push(
-  [
-    '@semantic-release/npm',
-    {
-      npmPublish: true,
-    },
-  ],
+  ['@semantic-release/npm', { npmPublish: true }],
   '@semantic-release/github'
 )
 
