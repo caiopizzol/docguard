@@ -1,3 +1,10 @@
+## [0.9.1](https://github.com/caiopizzol/docguard/compare/v0.9.0...v0.9.1) (2025-09-09)
+
+
+### Bug Fixes
+
+* resolve security vulnerability (test) ([#4](https://github.com/caiopizzol/docguard/issues/4)) ([e686b80](https://github.com/caiopizzol/docguard/commit/e686b8028ead1b14de40885b1ec3a06866cf9373))
+
 # [0.9.0](https://github.com/caiopizzol/docguard/compare/v0.8.0...v0.9.0) (2025-09-09)
 
 
