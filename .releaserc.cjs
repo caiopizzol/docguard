@@ -23,6 +23,8 @@ const config = {
   plugins: [
     '@semantic-release/commit-analyzer',
     '@semantic-release/release-notes-generator',
+    // NPM plugin MUST come before git plugin
+    ['@semantic-release/npm', { npmPublish: true }],
   ],
 }
 
@@ -32,7 +34,11 @@ const isPrerelease = config.branches.some(
 )
 
 if (!isPrerelease) {
-  config.plugins.push('@semantic-release/changelog', [
+  // Add changelog BEFORE git
+  config.plugins.push('@semantic-release/changelog')
+
+  // Git plugin comes AFTER npm and changelog
+  config.plugins.push([
     '@semantic-release/git',
     {
       assets: ['CHANGELOG.md', 'package.json'],
@@ -42,10 +48,7 @@ if (!isPrerelease) {
   ])
 }
 
-// Always add npm and github plugins
-config.plugins.push(
-  ['@semantic-release/npm', { npmPublish: true }],
-  '@semantic-release/github'
-)
+// GitHub plugin comes last
+config.plugins.push('@semantic-release/github')
 
 module.exports = config
