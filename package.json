@@ -1,6 +1,6 @@
 {
   "name": "docworks",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Ensure your docs work for developers and AI",
   "type": "module",
   "main": "dist/index.js",

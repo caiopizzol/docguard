@@ -1,3 +1,10 @@
+# [0.11.0](https://github.com/caiopizzol/docworks/compare/v0.10.0...v0.11.0) (2025-09-09)
+
+
+### Features
+
+* begin next development cycle [skip ci] ([9c7b29f](https://github.com/caiopizzol/docworks/commit/9c7b29f7ca1fa0d61364aa513694d75234208e97))
+
 # [0.10.0](https://github.com/caiopizzol/docworks/compare/v0.9.1...v0.10.0) (2025-09-09)
 
 ### Bug Fixes
