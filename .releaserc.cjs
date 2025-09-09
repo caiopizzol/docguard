@@ -6,17 +6,17 @@ const config = {
   branches: [
     {
       name: 'stable',
-      channel: 'latest',
+      channel: 'latest', // Only stable gets @latest
     },
     {
       name: 'main',
       prerelease: 'next',
       channel: 'next',
     },
+    // Maintenance branches - channel defaults to branch name
     {
-      name: '+([0-9])?(.{+([0-9]),x})',
-      channel: "${name.replace(/\\.x$/, '')}",
-      range: "${name.replace(/\\.x$/, '.x')}",
+      name: '+([0-9])?(.{+([0-9]),x}).x',
+      // No channel specified - defaults to branch name (0.8.x, 1.2.x, etc)
     },
   ],
   tagFormat: 'v${version}',
