@@ -1,11 +1,11 @@
 {
-  "name": "docguard",
+  "name": "docworks",
   "version": "0.10.0",
   "description": "Ensure your docs work for developers and AI",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "docguard": "./dist/index.js"
+    "docworks": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc",
@@ -71,11 +71,11 @@
   ],
   "author": "caiopizzol",
   "license": "MIT",
-  "homepage": "https://github.com/caiopizzol/docguard",
-  "bugs": "https://github.com/caiopizzol/docguard/issues",
+  "homepage": "https://github.com/caiopizzol/docworks",
+  "bugs": "https://github.com/caiopizzol/docworks/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/caiopizzol/docguard.git",
+    "url": "https://github.com/caiopizzol/docworks.git",
     "directory": "packages/cli"
   },
   "publishConfig": {

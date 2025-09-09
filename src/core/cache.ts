@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import os from 'os'
 
-const CACHE_DIR = path.join(os.homedir(), '.docguard', 'cache')
+const CACHE_DIR = path.join(os.homedir(), '.docworks', 'cache')
 const CACHE_TTL = 7 * 24 * 60 * 60 * 1000 // 7 days
 
 // Ensure cache directory exists

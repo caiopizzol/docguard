@@ -1,4 +1,4 @@
-# DocGuard Configuration - API Documentation
+# DocWorks Configuration - API Documentation
 source: ./llms.txt
 
 journeys:

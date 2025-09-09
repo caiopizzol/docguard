@@ -9,10 +9,10 @@ Your docs mention "authentication" 50 times, but developers still can't figure o
 
 ## How It Works
 
-Define what questions your docs must answer. DocGuard uses AI to verify they remain answerable after every change.
+Define what questions your docs must answer. DocWorks uses AI to verify they remain answerable after every change.
 
 ```yaml
-# docguard.yml
+# docworks.yml
 questions:
   critical:
     - How do I authenticate?
@@ -23,17 +23,17 @@ questions:
 ## Install
 
 ```bash
-npm install -g docguard
+npm install -g docworks
 ```
 
 ## Quick Start
 
 ```bash
 # 1. Initialize with smart defaults
-docguard init
+docworks init
 
 # 2. Check your docs (with your OpenAI key)
-OPENAI_API_KEY=sk-... docguard check
+OPENAI_API_KEY=sk-... docworks check
 ```
 
 Output:
@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: npx docguard check
+      - run: npx docworks check
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 ```
@@ -67,7 +67,7 @@ jobs:
 ## Configuration
 
 ```yaml
-# docguard.yml
+# docworks.yml
 questions:
   critical: # These block PRs if unanswerable
     - How do I install this?
@@ -91,16 +91,16 @@ Start quickly with pre-built templates:
 
 ```bash
 # API documentation
-docguard init --template api
+docworks init --template api
 
 # NPM package
-docguard init --template library
+docworks init --template library
 
 # Internal platform
-docguard init --template internal
+docworks init --template internal
 ```
 
-## Why DocGuard?
+## Why DocWorks?
 
 - **Explicit control** - You define what matters, not magic patterns
 - **AI-powered** - Understands context, not just keywords
@@ -143,7 +143,7 @@ questions:
 ## How It Really Works
 
 1. **You define questions** your docs must answer
-2. **DocGuard reads** all your documentation
+2. **DocWorks reads** all your documentation
 3. **AI validates** each question is answerable
 4. **CI/CD enforces** on every PR
 
@@ -157,15 +157,15 @@ No keyword matching. No regex patterns. Just: "Can a developer find this answer?
 
 ## Pricing
 
-- **DocGuard**: Free, open source, MIT licensed
+- **DocWorks**: Free, open source, MIT licensed
 - **AI costs**: ~$0.01 per check with caching (you pay provider directly)
 
 ## Development
 
 ```bash
 # Clone and install
-git clone https://github.com/caiopizzol/docguard
-cd docguard
+git clone https://github.com/caiopizzol/docworks
+cd docworks
 npm install
 
 # Run locally
@@ -195,6 +195,6 @@ MIT
 
 ## Links
 
-- [Documentation](https://docguard.dev)
-- [GitHub](https://github.com/caiopizzol/docguard)
-- [NPM](https://npmjs.com/package/docguard)
+- [Documentation](https://docworks.dev)
+- [GitHub](https://github.com/caiopizzol/docworks)
+- [NPM](https://npmjs.com/package/docworks)

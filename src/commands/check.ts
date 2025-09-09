@@ -1,4 +1,4 @@
-import { DocGuardConfig, JourneyResults } from '../types/config.js'
+import { DocWorksConfig, JourneyResults } from '../types/config.js'
 import { loadConfig } from '../utils/config.js'
 import { createSource } from '../sources/base.js'
 import { validateJourneys, validateQuestions } from '../core/validator.js'
@@ -12,7 +12,7 @@ export async function check(options: {
 }): Promise<void> {
   try {
     // Load config
-    const config = await loadConfig(options.config || 'docguard.yml')
+    const config = await loadConfig(options.config || 'docworks.yml')
 
     // Validate API key
     const apiKey =

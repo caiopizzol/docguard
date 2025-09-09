@@ -1,8 +1,8 @@
 import fs from 'fs'
 import yaml from 'yaml'
-import { DocGuardConfig } from '../types/config.js'
+import { DocWorksConfig } from '../types/config.js'
 
-export async function loadConfig(configPath: string): Promise<DocGuardConfig> {
+export async function loadConfig(configPath: string): Promise<DocWorksConfig> {
   if (!fs.existsSync(configPath)) {
     throw new Error(`Config file not found: ${configPath}`)
   }
@@ -19,5 +19,5 @@ export async function loadConfig(configPath: string): Promise<DocGuardConfig> {
     throw new Error('Config missing "journeys" section')
   }
 
-  return config as DocGuardConfig
+  return config as DocWorksConfig
 }

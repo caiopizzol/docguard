@@ -10,7 +10,7 @@ export class LLMSTxtSource implements DocSource {
     if (!fs.existsSync(this.filepath)) {
       throw new Error(
         'llms.txt not found. Create it with:\n' +
-          '  docguard init\n\n' +
+          '  docworks init\n\n' +
           'Or create manually listing your documentation files.'
       )
     }

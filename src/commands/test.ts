@@ -7,12 +7,12 @@ export async function test(options: {
   ai?: string
 }): Promise<void> {
   if (!options.ai) {
-    console.error('Specify a task: docguard test --ai "build hello world"')
+    console.error('Specify a task: docworks test --ai "build hello world"')
     process.exit(1)
   }
 
   try {
-    const config = await loadConfig(options.config || 'docguard.yml')
+    const config = await loadConfig(options.config || 'docworks.yml')
     const apiKey = process.env.OPENAI_API_KEY || config.api_key
 
     if (!apiKey) {

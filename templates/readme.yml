@@ -1,4 +1,4 @@
-# DocGuard Configuration - ReadMe
+# DocWorks Configuration - ReadMe
 source:
   type: mcp
   server: '@readme/mcp-server'
