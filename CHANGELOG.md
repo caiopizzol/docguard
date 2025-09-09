@@ -1,3 +1,10 @@
+# [0.3.0-next.6](https://github.com/caiopizzol/docguard/compare/v0.3.0-next.5...v0.3.0-next.6) (2025-09-09)
+
+
+### Features
+
+* start v0.4.0 development ([a7ffd3c](https://github.com/caiopizzol/docguard/commit/a7ffd3c2c26c825401c5825b69a36220f6540224))
+
 # [0.3.0-next.5](https://github.com/caiopizzol/docguard/compare/v0.3.0-next.4...v0.3.0-next.5) (2025-09-09)
 
 
