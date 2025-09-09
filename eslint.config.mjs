@@ -22,6 +22,7 @@ export default [
       '**/.next/**',
       '**/node_modules/**',
       '**/*.tsbuildinfo',
+      '**/*.cjs',
     ],
   },
 ]

@@ -6,9 +6,10 @@ on:
       - main
       - stable
       - '*.x' # Maintenance branches
-    paths-ignore:
-      - '**.md'
-      - '.github/workflows/*.yml'
+    paths:
+      - '!.github/workflows/*.yml'
+      - '!*.md'
+      - 'src/**'
   workflow_dispatch:
 
 permissions:
