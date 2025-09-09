@@ -1,3 +1,18 @@
+# [0.6.0](https://github.com/caiopizzol/docguard/compare/v0.5.0...v0.6.0) (2025-09-09)
+
+
+### Bug Fixes
+
+* test ([db1cd03](https://github.com/caiopizzol/docguard/commit/db1cd03a61989928d40ae47bd7a0e5811506318f))
+* test ([a8882ea](https://github.com/caiopizzol/docguard/commit/a8882ea19a1d6c5bd80af060e298d8adbc04b05d))
+* test ([9e916fe](https://github.com/caiopizzol/docguard/commit/9e916fee5efc7b386f5320f8aab1da7bda0edba9))
+* test ([aa42a08](https://github.com/caiopizzol/docguard/commit/aa42a081f7feadf211004cb8587ad2682204455e))
+
+
+### Features
+
+* begin next development cycle [skip ci] ([6c59346](https://github.com/caiopizzol/docguard/commit/6c59346a733cdcdbd35716f2f453de41b5f05edd))
+
 # [0.4.0](https://github.com/caiopizzol/docguard/compare/v0.3.0...v0.4.0) (2025-09-09)
 
 ### Bug Fixes
