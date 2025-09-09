@@ -1,13 +1,18 @@
 {
   "branches": [
     {
+      "name": "stable",
+      "channel": "latest"
+    },
+    {
       "name": "main",
       "prerelease": "next",
       "channel": "next"
     },
     {
-      "name": "release/v+([0-9])?(.+([0-9]))",
-      "channel": "latest"
+      "name": "+([0-9])?(.{+([0-9]),x})",
+      "channel": "${name.replace(/\\.x$/, '')}",
+      "range": "${name.replace(/\\.x$/, '.x')}"
     }
   ],
   "tagFormat": "v${version}",

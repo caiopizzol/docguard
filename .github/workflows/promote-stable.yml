@@ -1,0 +1,73 @@
+name: 🚀 Promote to Stable
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_tag:
+        description: 'Source tag to promote (e.g., v1.0.0-next.5)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Determine source
+        id: source
+        run: |
+          if [ -n "${{ inputs.source_tag }}" ]; then
+            SOURCE_TAG="${{ inputs.source_tag }}"
+          else
+            # Get latest next tag
+            SOURCE_TAG=$(git tag -l "v*-next.*" --sort=-v:refname | head -1)
+          fi
+
+          if [ -z "$SOURCE_TAG" ]; then
+            echo "❌ No next releases found to promote"
+            exit 1
+          fi
+
+          echo "source_tag=$SOURCE_TAG" >> $GITHUB_OUTPUT
+          echo "Promoting $SOURCE_TAG to stable"
+
+      - name: Create PR to stable
+        run: |
+          SOURCE_TAG="${{ steps.source.outputs.source_tag }}"
+
+          # Checkout stable branch
+          git checkout stable || git checkout -b stable
+
+          # Merge the tag
+          git merge $SOURCE_TAG --no-ff -m "chore: promote $SOURCE_TAG to stable"
+
+          # Push to create PR branch
+          BRANCH="promote-${SOURCE_TAG//v/}"
+          git checkout -b $BRANCH
+          git push origin $BRANCH
+
+          # Create PR using GitHub CLI
+          gh pr create \
+            --base stable \
+            --head $BRANCH \
+            --title "🚀 Promote $SOURCE_TAG to stable" \
+            --body "Promotes $SOURCE_TAG from next channel to stable release.
+            
+            This will trigger a stable release once merged." \
+            --label "release"
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}

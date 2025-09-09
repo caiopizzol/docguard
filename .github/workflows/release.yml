@@ -1,17 +1,21 @@
-name: 📦 Release Stable
+name: 📦 Release
 
 on:
   push:
-    branches: ['release/**']
+    branches:
+      - main
+      - stable
+      - '*.x' # Maintenance branches
+    paths-ignore:
+      - '**.md'
+      - '.github/workflows/pr-*.yml'
   workflow_dispatch:
 
 permissions:
   contents: write
   packages: write
-
-concurrency:
-  group: release-stable-${{ github.ref }}
-  cancel-in-progress: true
+  issues: write
+  pull-requests: write
 
 jobs:
   test:
@@ -19,8 +23,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - uses: pnpm/action-setup@v2
         with:
@@ -29,9 +31,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Lint and type check
         run: |
@@ -41,8 +44,8 @@ jobs:
       - name: Build
         run: pnpm build
 
-      # - name: Test
-      #   run: pnpm test
+      - name: Test
+        run: pnpm test
 
   release:
     needs: test
@@ -53,11 +56,6 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GH_PAT }}
 
-      - name: Fetch all branches
-        run: |
-          git fetch --all
-          git branch -a
-
       - uses: pnpm/action-setup@v2
         with:
           version: 8
@@ -65,27 +63,25 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: pnpm
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
-      - name: Build packages
+      - name: Build
         run: pnpm build
 
-      - name: Debug branch info
+      - name: Get branch info
         run: |
-          echo "Current branch: $(git branch --show-current)"
-          echo "All branches:"
-          git branch -a
-          echo "Git status:"
-          git status
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Event: ${{ github.event_name }}"
+          git branch -r
+          git tag -l
 
-      - name: Release to latest channel
+      - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "Running semantic-release on branch: $(git branch --show-current)"
-          npx semantic-release --debug
+        run: npx semantic-release
