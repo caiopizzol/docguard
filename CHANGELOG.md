@@ -1,3 +1,17 @@
+# [0.9.0](https://github.com/caiopizzol/docguard/compare/v0.8.0...v0.9.0) (2025-09-09)
+
+
+### Bug Fixes
+
+* test ([9a80f70](https://github.com/caiopizzol/docguard/commit/9a80f70bd0150d495f4ddd81d2e535734a391f85))
+
+
+### Features
+
+* add GitHub Actions workflow for forward-porting patches ([07a4dd5](https://github.com/caiopizzol/docguard/commit/07a4dd5f0041c203f9586f903159dc70bc27c668))
+* begin next development cycle [skip ci] ([a9cb21a](https://github.com/caiopizzol/docguard/commit/a9cb21a5f2ee2d311bd25978a8dbc09123b6044d))
+* enhance forward-port workflow with manual trigger and version input ([d617dfa](https://github.com/caiopizzol/docguard/commit/d617dfaf031b906e567b24b2d5258b66d8cdbb94))
+
 # [0.8.0](https://github.com/caiopizzol/docguard/compare/v0.7.0...v0.8.0) (2025-09-09)
 
 ### Features
