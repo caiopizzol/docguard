@@ -1,3 +1,11 @@
+# [0.8.0](https://github.com/caiopizzol/docguard/compare/v0.7.0...v0.8.0) (2025-09-09)
+
+
+### Features
+
+* begin next development cycle [skip ci] ([c2b9b79](https://github.com/caiopizzol/docguard/commit/c2b9b792ba0c999cd2642fb09ce8b6aeb039b933))
+* test ([aa036bb](https://github.com/caiopizzol/docguard/commit/aa036bb60971928924eacd613a6397c93bd69752))
+
 # [0.7.0](https://github.com/caiopizzol/docguard/compare/v0.6.0...v0.7.0) (2025-09-09)
 
 ### Features
