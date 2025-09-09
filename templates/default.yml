@@ -1,29 +1,19 @@
 # DocGuard Configuration
-# Define what questions your documentation must answer
+source: ./llms.txt
 
-questions:
-  # Critical questions - these will fail the check if not answerable
-  critical:
-    - How do I install this project?
+journeys:
+  getting_started:
+    - How do I install this?
     - How do I get started?
-    - Where can I find examples?
+    - Where are examples?
 
-  # Important questions - these will warn if not answerable
-  important:
-    - How do I configure this?
-    - How do I report issues?
-    - What are the system requirements?
+  development:
+    - How do I run tests?
+    - How do I debug issues?
+    - Where can I get help?
 
-  # Nice to have - these are informational only
-  nice_to_have:
-    - How do I contribute?
-    - Where is the changelog?
-
-# OpenAI API configuration
-# You can set this here or use OPENAI_API_KEY environment variable
-# api_key: sk-...
-
-# Model to use (gpt-4o-mini is recommended for cost)
+# AI Provider (openai or anthropic)
+provider: openai
 model: gpt-4o-mini
-# Where to look for documentation (optional, defaults to current directory)
-# docs_path: ./docs
+# Optional: Set API key here instead of environment variable
+# api_key: sk-...

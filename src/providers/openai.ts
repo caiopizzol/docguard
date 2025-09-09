@@ -6,7 +6,7 @@ export class OpenAIProvider implements AIProvider {
   private client: OpenAI
   private model: string
 
-  constructor(apiKey: string, model = 'gpt-5-nano-2025-08-07') {
+  constructor(apiKey: string, model = 'gpt-4o-mini') {
     this.client = new OpenAI({ apiKey })
     this.model = model
   }
@@ -41,5 +41,15 @@ LOCATION: [Where found, or "Not found"]`
       location: content.match(/LOCATION:\s*(.+)/)?.[1] || 'Not found',
     }
   }
+
+  async complete(prompt: string): Promise<string> {
+    const response = await this.client.chat.completions.create({
+      model: this.model,
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.3,
+      max_tokens: 2000,
+    })
+
+    return response.choices[0].message.content || ''
+  }
 }
-//*

@@ -1,24 +1,21 @@
-# DocGuard Configuration for API Documentation
+# DocGuard Configuration - API Documentation
+source: ./llms.txt
 
-questions:
-  critical:
-    - How do I authenticate with the API?
-    - What are the API endpoints?
+journeys:
+  authentication:
+    - How do I authenticate?
+    - Where do I get API keys?
+    - What auth methods are supported?
+
+  integration:
+    - What are the endpoints?
     - How do I handle errors?
     - What are the rate limits?
-    - Where can I find the API reference?
 
-  important:
-    - How do I paginate results?
-    - What are the response formats?
-    - How do I filter results?
-    - Are there SDK libraries available?
-    - How do I get an API key?
+  production:
+    - How do I monitor usage?
+    - Where are status pages?
+    - How do I get support?
 
-  nice_to_have:
-    - Are there webhooks available?
-    - How do I test the API?
-    - What's the API versioning strategy?
-    - Are there usage examples?
-
+provider: openai
 model: gpt-4o-mini

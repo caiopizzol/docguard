@@ -3,35 +3,36 @@
 import { Command } from 'commander'
 import { init } from './commands/init.js'
 import { check } from './commands/check.js'
+import { test } from './commands/test.js'
 
 const program = new Command()
 
 program
   .name('docguard')
-  .description('Ensure your docs answer critical questions')
-  .version('0.1.0')
+  .description('Ensure your docs work for developers and AI')
+  .version('1.0.0')
 
 program
   .command('init')
   .description('Initialize DocGuard configuration')
-  .option(
-    '-t, --template <type>',
-    'Use template (api, library, default)',
-    'default'
-  )
+  .option('-t, --template <t>', 'Template: default, api, library', 'default')
+  .option('-p, --platform <p>', 'Platform: mintlify, readme, gitbook')
   .action(init)
 
 program
   .command('check')
-  .description('Check if docs answer configured questions')
-  .option('-c, --config <path>', 'Config file path', 'docguard.yml')
+  .description('Validate documentation completeness')
+  .option('-c, --config <path>', 'Config file', 'docguard.yml')
+  .option('-j, --journey <name>', 'Check specific journey')
   .option('--no-cache', 'Disable caching')
-  .option('--verbose', 'Show detailed output')
-  .option(
-    '--format <type>',
-    'Output format (terminal, json, github)',
-    'terminal'
-  )
+  .option('-f, --format <type>', 'Output: terminal, json, github', 'terminal')
   .action(check)
+
+program
+  .command('test')
+  .description('Test if AI can complete tasks using your docs')
+  .option('-c, --config <path>', 'Config file', 'docguard.yml')
+  .option('--ai <task>', 'Task for AI to complete')
+  .action(test)
 
 program.parse()

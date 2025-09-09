@@ -6,7 +6,7 @@ export class AnthropicProvider implements AIProvider {
   private client: Anthropic
   private model: string
 
-  constructor(apiKey: string, model = 'claude-sonnet-4-20250514') {
+  constructor(apiKey: string, model = 'claude-3-5-sonnet-20241022') {
     this.client = new Anthropic({ apiKey })
     this.model = model
   }
@@ -45,5 +45,20 @@ LOCATION: [Where found, or "Not found"]`,
       location: content.match(/LOCATION:\s*(.+)/)?.[1] || 'Not found',
     }
   }
+
+  async complete(prompt: string): Promise<string> {
+    const response = await this.client.messages.create({
+      model: this.model,
+      max_tokens: 2000,
+      temperature: 0.3,
+      messages: [
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ],
+    })
+
+    return response.content[0].type === 'text' ? response.content[0].text : ''
+  }
 }
-// *
