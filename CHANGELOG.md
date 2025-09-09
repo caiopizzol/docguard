@@ -1,3 +1,17 @@
+# [0.10.0](https://github.com/caiopizzol/docguard/compare/v0.9.1...v0.10.0) (2025-09-09)
+
+
+### Bug Fixes
+
+* test ([f429144](https://github.com/caiopizzol/docguard/commit/f42914479c81baaef3d4007bcccfbc12feccf2bd))
+
+
+### Features
+
+* begin next development cycle [skip ci] ([19ea31c](https://github.com/caiopizzol/docguard/commit/19ea31c662473cb6ef35654d060e4b4cdc2cdbfb))
+* begin next development cycle [skip ci] ([98ede22](https://github.com/caiopizzol/docguard/commit/98ede226c4fe77c649e8a35ecb01c7a42d8ea78b))
+* update documentation structure and enhance validation features ([69842fd](https://github.com/caiopizzol/docguard/commit/69842fdf38f5667cd0b6739f79b98c6aa2489679))
+
 ## [0.9.1](https://github.com/caiopizzol/docguard/compare/v0.9.0...v0.9.1) (2025-09-09)
 
 ### Bug Fixes
