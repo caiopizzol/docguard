@@ -1,3 +1,25 @@
+# [0.3.0](https://github.com/caiopizzol/docguard/compare/v0.2.0...v0.3.0) (2025-09-09)
+
+
+### Bug Fixes
+
+* correct comment formatting in cache.ts ([c983103](https://github.com/caiopizzol/docguard/commit/c983103821d7d2a0c4136319a5e6f3ffb4a4b811))
+* next release ([c39ce42](https://github.com/caiopizzol/docguard/commit/c39ce42bfb06054e4860035e261d4940fa47076f))
+* next release tag ([ad99044](https://github.com/caiopizzol/docguard/commit/ad9904411802bef1e0eed610cf569637ffe948ad))
+* test ([29960c0](https://github.com/caiopizzol/docguard/commit/29960c0e76842c1f964e5c0566543e2b7eb209ba))
+* test ([ebb47d1](https://github.com/caiopizzol/docguard/commit/ebb47d161ad62df9e20a6357233dc57a973c63f2))
+* test ([0f477d4](https://github.com/caiopizzol/docguard/commit/0f477d4013922ad93e45515407d15bd516751fe4))
+* test ([abbd476](https://github.com/caiopizzol/docguard/commit/abbd476cf396eed9a6a30bf72546e19f23dce38f))
+* test ([eaae2a6](https://github.com/caiopizzol/docguard/commit/eaae2a658f794068e4a2ac3368a7e30f70c6f7e4))
+* test next release ([92c0ac4](https://github.com/caiopizzol/docguard/commit/92c0ac45cea798948938cae81ccdb099f3c1ec42))
+* testing next tag ([2049d37](https://github.com/caiopizzol/docguard/commit/2049d370df9d718394b9643a2e7026f5a09ed699))
+* testing next tag ([f442f1f](https://github.com/caiopizzol/docguard/commit/f442f1f3e630e3181134d8df878fdecfd4d9e1df))
+
+
+### Features
+
+* add new feature ([ef38744](https://github.com/caiopizzol/docguard/commit/ef38744d2cfcc99e6f108ed42cc605b8cea4a9a8))
+
 # [0.3.0-next.3](https://github.com/caiopizzol/docguard/compare/v0.3.0-next.2...v0.3.0-next.3) (2025-09-09)
 
 ### Bug Fixes
