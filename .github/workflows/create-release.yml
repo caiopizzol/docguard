@@ -33,7 +33,7 @@ jobs:
           else
             # Get current version from package.json
             CURRENT=$(node -p "require('./package.json').version")
-            # Remove prerelease suffix if present (e.g., 0.2.0-next.1 -> 0.2.0)
+            # Remove prerelease suffix if present (e.g., 0.3.0-next.1 -> 0.3.0)
             BASE_VERSION=${CURRENT%%-*}
             # Extract major.minor
             IFS='.' read -r major minor patch <<< "$BASE_VERSION"
@@ -47,10 +47,18 @@ jobs:
           BRANCH="release/v${{ steps.version.outputs.version }}"
           git checkout -b "$BRANCH"
 
-          # Add empty commit to trigger release workflow
-          git commit --allow-empty -m "chore: initialize release branch v${{ steps.version.outputs.version }}"
+          # Clean up the version in package.json for the release branch
+          CURRENT=$(node -p "require('./package.json').version")
+          BASE_VERSION=${CURRENT%%-*}  # Remove -next.X suffix
+
+          # Update package.json to the clean version
+          npm version $BASE_VERSION --no-git-tag-version --allow-same-version
+
+          # Commit the cleaned version
+          git add package.json
+          git commit -m "chore: prepare stable release v$BASE_VERSION"
 
           git push origin "$BRANCH"
 
-          echo "✅ Created $BRANCH from main"
+          echo "✅ Created $BRANCH from main with version $BASE_VERSION"
           echo "The stable release workflow will trigger automatically."
