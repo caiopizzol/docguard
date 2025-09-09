@@ -45,7 +45,24 @@ jobs:
       - name: Create release branch
         run: |
           BRANCH="release/v${{ steps.version.outputs.version }}"
+
+          # Fetch all tags to ensure we have everything
+          git fetch --all --tags
+
+          # Get the last stable release tag
+          LAST_STABLE=$(git tag -l "v*.*.0" --sort=-v:refname | grep -v "next" | head -1)
+          echo "Last stable release: $LAST_STABLE"
+
+          # Create branch from main
           git checkout -b "$BRANCH"
+
+          # Merge the last stable release tag to include it in history
+          # This ensures semantic-release knows about previous releases
+          if [ -n "$LAST_STABLE" ]; then
+            echo "Merging $LAST_STABLE into release branch history"
+            git merge --allow-unrelated-histories --no-commit $LAST_STABLE || true
+            git reset HEAD
+          fi
 
           # Get the full version from package.json and clean it
           CURRENT=$(node -p "require('./package.json').version")
