@@ -1,4 +1,4 @@
-import { createProvider } from './providers/base.js'
+import { createProvider } from '../providers/base.js'
 
 export async function checkAnswerability(
   question: string,
@@ -31,9 +31,8 @@ export async function checkAnswerability(
 
   // Return error state instead of throwing
   return {
-    answerable: 'ERROR' as const,
+    answerable: 'NO' as const,
     reason: lastError?.message || 'Unknown error',
     location: 'N/A',
   }
 }
-//*

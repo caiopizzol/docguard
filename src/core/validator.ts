@@ -1,38 +1,44 @@
+import crypto from 'crypto'
+import { ValidationResult, JourneyResults } from '../types/config.js'
 import { checkAnswerability } from './ai.js'
 import { getCached, setCached } from './cache.js'
-import crypto from 'crypto'
 
-export async function validateQuestions(
-  questions: any,
+export async function validateJourneys(
+  journeys: Record<string, string[]>,
   docs: string,
   apiKey: string,
-  useCache: boolean = true
-): Promise<any> {
-  const results = {
-    critical: [],
-    important: [],
-    nice_to_have: [],
+  useCache = true
+): Promise<JourneyResults> {
+  const results: JourneyResults = {}
+
+  for (const [journey, questions] of Object.entries(journeys)) {
+    results[journey] = await validateQuestions(
+      questions,
+      docs,
+      apiKey,
+      useCache
+    )
   }
 
-  // Flatten all questions with their priority
-  const allQuestions: Array<{ question: string; priority: string }> = []
-  for (const [priority, questionList] of Object.entries(questions)) {
-    if (Array.isArray(questionList)) {
-      for (const question of questionList) {
-        allQuestions.push({ question, priority })
-      }
-    }
-  }
+  return results
+}
 
-  // Check each question
-  for (const { question, priority } of allQuestions) {
+export async function validateQuestions(
+  questions: string[],
+  docs: string,
+  apiKey: string,
+  useCache = true
+): Promise<ValidationResult[]> {
+  const results: ValidationResult[] = []
+
+  for (const question of questions) {
     // Generate cache key
     const cacheKey = crypto
       .createHash('md5')
-      .update(question + docs)
+      .update(question + docs.substring(0, 1000)) // Use first 1KB for cache key
       .digest('hex')
 
-    let result
+    let result: ValidationResult | null = null
 
     // Try cache first
     if (useCache) {
@@ -41,7 +47,11 @@ export async function validateQuestions(
 
     // If not cached, check with AI
     if (!result) {
-      result = await checkAnswerability(question, docs, apiKey)
+      const validation = await checkAnswerability(question, docs, apiKey)
+      result = {
+        question,
+        ...validation,
+      }
 
       // Cache the result
       if (useCache) {
@@ -49,15 +59,7 @@ export async function validateQuestions(
       }
     }
 
-    // Store result
-    if (!(results as any)[priority]) {
-      ;(results as any)[priority] = []
-    }
-
-    ;(results as any)[priority].push({
-      question,
-      ...result,
-    })
+    results.push(result)
 
     // Show progress
     const icon =
@@ -66,9 +68,8 @@ export async function validateQuestions(
         : result.answerable === 'PARTIAL'
           ? '⚠️'
           : '❌'
-    console.log(`${icon} ${question}`)
+    console.log(`  ${icon} ${question}`)
   }
 
   return results
 }
-//**

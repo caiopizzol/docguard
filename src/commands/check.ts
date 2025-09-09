@@ -1,98 +1,87 @@
+import { DocGuardConfig, JourneyResults } from '../types/config.js'
 import { loadConfig } from '../utils/config.js'
-import { findDocs, readDocs } from '../utils/docs.js'
-import { validateQuestions } from '../core/validator.js'
-import { report } from '../utils/reporter.js'
+import { createSource } from '../sources/base.js'
+import { validateJourneys, validateQuestions } from '../core/validator.js'
+import { formatReport, formatJSON } from '../utils/reporter.js'
 
 export async function check(options: {
   config: string
-  cache: boolean
-  verbose: boolean
-  format?: string
+  journey?: string
+  cache?: boolean
+  format?: 'terminal' | 'json' | 'github'
 }): Promise<void> {
   try {
-    // Load configuration
-    const config = await loadConfig(options.config)
-    if (!config) {
-      console.error('❌ No docguard.yml found. Run "docguard init" first.')
-      process.exit(1)
-    }
+    // Load config
+    const config = await loadConfig(options.config || 'docguard.yml')
 
-    // Check API key
-    const apiKey = process.env.OPENAI_API_KEY || config.api_key
+    // Validate API key
+    const apiKey =
+      process.env.OPENAI_API_KEY ||
+      process.env.ANTHROPIC_API_KEY ||
+      config.api_key
+
     if (!apiKey) {
-      console.error('❌ OpenAI API key not found.')
-      console.error(
-        'Set OPENAI_API_KEY environment variable or add to docguard.yml'
-      )
+      console.error('❌ No API key found\n')
+      console.error('Set one of:')
+      console.error('  export OPENAI_API_KEY=sk-...')
+      console.error('  export ANTHROPIC_API_KEY=sk-ant-...')
       process.exit(1)
     }
 
-    console.log('📚 Reading documentation...\n')
+    // Load documentation
+    console.log('📚 Loading documentation...')
+    const source = await createSource(config)
+    console.log(`Source: ${source.name}\n`)
 
-    // Find and read all documentation
-    const docFiles = await findDocs(config.docs_path || '.')
-    const docs = await readDocs(docFiles)
+    const docs = await source.fetch()
 
-    if (!docs || docs.length === 0) {
-      console.error('❌ No documentation files found')
-      process.exit(1)
-    }
+    // Validate journeys
+    console.log('🔍 Validating journeys...\n')
 
-    console.log(`Found ${docFiles.length} documentation files\n`)
-    console.log('🤔 Checking if questions are answerable...\n')
+    let results: JourneyResults
 
-    // Validate each question
-    const results = await validateQuestions(
-      config.questions,
-      docs,
-      apiKey,
-      options.cache !== false
-    )
-
-    // Handle JSON output format
-    if (options.format === 'json') {
-      const allQuestions = [
-        ...(results.critical || []),
-        ...(results.important || []),
-        ...(results.nice_to_have || []),
-      ]
-
-      const exitCode = results.critical?.some((r: any) => r.answerable === 'NO')
-        ? 1
-        : 0
-
-      const output = {
-        version: '1.0.0',
-        timestamp: new Date().toISOString(),
-        summary: {
-          total: allQuestions.length,
-          passing: allQuestions.filter((q: any) => q.answerable === 'YES')
-            .length,
-          failing: allQuestions.filter((q: any) => q.answerable === 'NO')
-            .length,
-          partial: allQuestions.filter((q: any) => q.answerable === 'PARTIAL')
-            .length,
-        },
-        results: {
-          critical: results.critical || [],
-          important: results.important || [],
-          nice_to_have: results.nice_to_have || [],
-        },
-        exitCode,
+    if (options.journey) {
+      // Validate single journey
+      const questions = config.journeys[options.journey]
+      if (!questions) {
+        console.error(`Journey "${options.journey}" not found`)
+        process.exit(1)
       }
 
-      console.log(JSON.stringify(output, null, 2))
-      process.exit(exitCode)
+      console.log(`Journey: ${options.journey}`)
+      console.log('─'.repeat(40))
+
+      results = {
+        [options.journey]: await validateQuestions(
+          questions,
+          docs,
+          apiKey,
+          options.cache !== false
+        ),
+      }
+    } else {
+      // Validate all journeys
+      results = await validateJourneys(
+        config.journeys,
+        docs,
+        apiKey,
+        options.cache !== false
+      )
     }
 
-    // Report results
-    const exitCode = report(results, options.verbose)
-    process.exit(exitCode)
+    // Format output
+    if (options.format === 'json') {
+      console.log(formatJSON(results, source.name))
+      const hasFailures = Object.values(results).some((questions) =>
+        questions.some((q) => q.answerable === 'NO')
+      )
+      process.exit(hasFailures ? 1 : 0)
+    } else {
+      const exitCode = formatReport(results, options.format === 'github')
+      process.exit(exitCode)
+    }
   } catch (error) {
     console.error('❌ Error:', (error as Error).message)
-    if (options.verbose) {
-      console.error((error as Error).stack)
-    }
     process.exit(1)
   }
 }

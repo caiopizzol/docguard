@@ -2,7 +2,7 @@ import { OpenAIProvider } from './openai.js'
 import { AnthropicProvider } from './anthropic.js'
 
 export interface ValidationResult {
-  answerable: 'YES' | 'PARTIAL' | 'NO' | 'ERROR'
+  answerable: 'YES' | 'PARTIAL' | 'NO'
   reason: string
   location?: string
 }
@@ -10,6 +10,7 @@ export interface ValidationResult {
 export interface AIProvider {
   name: string
   checkAnswerability(question: string, docs: string): Promise<ValidationResult>
+  complete(prompt: string): Promise<string>
 }
 
 export function createProvider(
@@ -27,4 +28,3 @@ export function createProvider(
     }
   }
 }
-//*

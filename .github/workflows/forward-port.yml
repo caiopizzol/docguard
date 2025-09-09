@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - '*.x' # Maintenance branches
-    tags:
-      - 'v*.*.*' # When a new version is tagged
   workflow_dispatch:
     inputs:
       version:
