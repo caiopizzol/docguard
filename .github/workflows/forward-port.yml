@@ -1,0 +1,72 @@
+name: 🔄 Forward Port Patches
+
+on:
+  push:
+    branches:
+      - '*.x' # Maintenance branches
+    tags:
+      - 'v*.*.*' # When a new version is tagged
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to forward-port (e.g., 0.7.1)'
+        required: true
+        type: string
+
+jobs:
+  forward-port:
+    # Auto mode: run after a release tag
+    # Manual mode: run immediately
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create forward-port PR
+        run: |
+          # Get version from tag or manual input
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+            COMMIT=$(git rev-list -n 1 "v${VERSION}" || echo "")
+          else
+            VERSION=${GITHUB_REF#refs/tags/v}
+            COMMIT=$(git rev-list -n 1 $GITHUB_REF)
+          fi
+
+          if [ -z "$COMMIT" ]; then
+            echo "Version v${VERSION} not found"
+            exit 1
+          fi
+
+          # Create branch for the forward-port
+          BRANCH="forward-port/${VERSION}"
+          git checkout main
+          git checkout -b $BRANCH
+
+          # Cherry-pick the fix commit (skip [skip ci] commits)
+          LAST_FIX=$(git log $COMMIT --format=%H --grep='\[skip ci\]' --invert-grep -n 1)
+
+          if [ -n "$LAST_FIX" ]; then
+            git cherry-pick $LAST_FIX || true
+            git push origin $BRANCH
+            
+            # Create PR
+            gh pr create \
+              --base main \
+              --head $BRANCH \
+              --title "🔄 Forward-port fix from v${VERSION}" \
+              --body "Forward-porting fix from v${VERSION} to main.
+              
+              Original fix: $LAST_FIX" \
+              --label "forward-port"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
