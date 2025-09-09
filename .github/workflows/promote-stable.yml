@@ -49,16 +49,27 @@ jobs:
         run: |
           SOURCE_TAG="${{ steps.source.outputs.source_tag }}"
 
-          # Checkout stable branch
-          git checkout stable || git checkout -b stable
+          # Checkout stable branch or create from source tag
+          git checkout stable 2>/dev/null || git checkout -b stable
 
-          # Merge the tag
-          git merge $SOURCE_TAG --no-ff -m "chore: promote $SOURCE_TAG to stable"
+          # Instead of merging, reset stable to the tag we want to promote
+          # This avoids conflicts by making stable exactly match the tag
+          git reset --hard $SOURCE_TAG
+
+          # Update package.json to remove prerelease suffix
+          # Extract version without prerelease (0.3.0-next.3 -> 0.3.0)
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          STABLE_VERSION=${CURRENT_VERSION%-next.*}
+          npm version $STABLE_VERSION --no-git-tag-version --allow-same-version
+
+          # Commit the stable version
+          git add package.json
+          git commit -m "chore: promote $SOURCE_TAG to stable v$STABLE_VERSION" || true
 
           # Push to create PR branch
           BRANCH="promote-${SOURCE_TAG//v/}"
           git checkout -b $BRANCH
-          git push origin $BRANCH
+          git push origin $BRANCH --force
 
           # Create PR using GitHub CLI
           gh pr create \
@@ -68,6 +79,6 @@ jobs:
             --body "Promotes $SOURCE_TAG from next channel to stable release.
             
             This will trigger a stable release once merged." \
-            --label "release"
+            --label "release" || echo "PR might already exist"
         env:
           GH_TOKEN: ${{ secrets.GH_PAT }}
