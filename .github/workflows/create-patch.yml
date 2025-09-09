@@ -1,0 +1,50 @@
+name: 🔧 Create Patch Branch
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Major.minor version to patch (e.g., 1.2)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  create-patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create maintenance branch
+        run: |
+          VERSION="${{ inputs.version }}"
+          BRANCH="${VERSION}.x"
+
+          # Find the last tag for this version
+          LAST_TAG=$(git tag -l "v${VERSION}.*" --sort=-v:refname | grep -v "next\|rc" | head -1)
+
+          if [ -z "$LAST_TAG" ]; then
+            echo "❌ No stable release found for v${VERSION}"
+            exit 1
+          fi
+
+          echo "Creating maintenance branch $BRANCH from $LAST_TAG"
+
+          # Create branch from the tag
+          git checkout -b $BRANCH $LAST_TAG
+
+          # Push the branch
+          git push origin $BRANCH
+
+          echo "✅ Created maintenance branch $BRANCH"
+          echo "You can now cherry-pick fixes to this branch"

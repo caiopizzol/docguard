@@ -1,19 +1,31 @@
 {
   "branches": [
     {
-      "name": "main",
-      "prerelease": "next"
+      "name": "stable",
+      "channel": "latest"
     },
     {
-      "name": "release/v+([0-9])?(.+([0-9]))",
-      "channel": "latest"
+      "name": "main",
+      "prerelease": "next",
+      "channel": "next"
+    },
+    {
+      "name": "+([0-9])?(.{+([0-9]),x})",
+      "channel": "${name.replace(/\\.x$/, '')}",
+      "range": "${name.replace(/\\.x$/, '.x')}"
     }
   ],
+  "tagFormat": "v${version}",
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
     "@semantic-release/changelog",
-    "@semantic-release/npm",
+    [
+      "@semantic-release/npm",
+      {
+        "npmPublish": true
+      }
+    ],
     "@semantic-release/github",
     [
       "@semantic-release/git",
