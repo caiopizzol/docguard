@@ -2,7 +2,7 @@ import fs from 'fs'
 
 const TEMPLATES = {
   simple: `# DocWorks Configuration
-source: https://docs.example.com  # or ./docs for local
+source: https://docs.example.com
 
 # Simple list of questions to validate
 questions:
@@ -17,7 +17,7 @@ provider: \${PROVIDER:-openai}
 model: \${MODEL:-gpt-4o-mini}`,
 
   journeys: `# DocWorks Configuration
-source: https://docs.example.com  # or ./docs for local
+source: https://docs.example.com
 
 # Group questions by user journey
 journeys:
