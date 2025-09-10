@@ -1,7 +1,8 @@
 export interface DocWorksConfig {
   source: string // URL (https://docs.site.com) or local path (./docs)
-  journeys: Record<string, string[]>
-  provider?: 'openai' | 'anthropic'
+  questions?: string[] // Standalone questions (treated as implicit "general" journey)
+  journeys?: Record<string, string[]>
+  provider?: string // Simplified to allow any provider name
   model?: string
   api_key?: string
 }
@@ -15,9 +16,4 @@ export interface ValidationResult {
 
 export interface JourneyResults {
   [journey: string]: ValidationResult[]
-}
-
-export interface DocSource {
-  name: string
-  fetch(): Promise<string>
 }

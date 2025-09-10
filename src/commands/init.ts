@@ -1,82 +1,42 @@
 import fs from 'fs'
 
 const TEMPLATES = {
-  default: `# DocWorks Configuration
-# Point to your documentation URL or local folder
+  simple: `# DocWorks Configuration
 source: https://docs.example.com  # or ./docs for local
 
+# Simple list of questions to validate
+questions:
+  - How do I authenticate?
+  - What are the rate limits?
+  - How do I get started?
+  - Where can I find examples?
+  - How do I handle errors?
+
+# Provider configuration (supports environment variables)
+provider: \${PROVIDER:-openai}
+model: \${MODEL:-gpt-4o-mini}`,
+
+  journeys: `# DocWorks Configuration
+source: https://docs.example.com  # or ./docs for local
+
+# Group questions by user journey
 journeys:
-  getting_started:
-    - How do I install this?
-    - How do I get started?
-    - Where are examples?
+  authentication:
+    - How do I get API keys?
+    - How do I authenticate requests?
+    - What auth methods are supported?
     
-  development:
-    - How do I run tests?
-    - How do I debug issues?
-    - Where can I get help?
+  error_handling:
+    - What error codes exist?
+    - How should I handle rate limits?
+    - Where are error examples?
 
-provider: openai
-model: gpt-4o-mini`,
-
-  mintlify: `# DocWorks Configuration - Mintlify
-source: https://docs.yourcompany.com  # Your Mintlify docs URL
-
-journeys:
-  api_reference:
-    - Where is the API reference?
-    - Are all endpoints documented?
-    - Do examples work?
-    
-  getting_started:
-    - Is there a quickstart guide?
-    - How do I authenticate?
-    - What SDKs are available?
-
-provider: openai
-model: gpt-4o-mini`,
-
-  readme: `# DocWorks Configuration - ReadMe
-source: https://docs.yourcompany.com  # Your ReadMe docs URL
-
-journeys:
-  developer_experience:
-    - Can I try the API interactively?
-    - Are there code examples?
-    - Is versioning documented?
-
-provider: openai
-model: gpt-4o-mini`,
-
-  gitbook: `# DocWorks Configuration - GitBook
-source: https://docs.yourcompany.com  # Your GitBook URL
-
-journeys:
-  knowledge_base:
-    - Is content organized logically?
-    - Can I search effectively?
-    - Are guides comprehensive?
-
-provider: openai
-model: gpt-4o-mini`,
-
-  local: `# DocWorks Configuration - Local Documentation
-source: ./docs  # Path to your documentation folder
-
-journeys:
-  getting_started:
-    - How do I get started?
-    - Where are examples?
-    - What are the prerequisites?
-
-provider: openai
-model: gpt-4o-mini`,
+# Provider configuration (supports environment variables)
+provider: \${PROVIDER:-openai}
+model: \${MODEL:-gpt-4o-mini}`,
 }
 
-export async function init(options: {
-  template?: string
-  platform?: string
-}): Promise<void> {
+export async function init(options: { template?: string }): Promise<void> {
   console.log('🚀 Initializing DocWorks...\n')
 
   // Check existing config
@@ -86,12 +46,12 @@ export async function init(options: {
   }
 
   // Select template
-  const templateName = options.platform || options.template || 'default'
+  const templateName = options.template || 'simple'
   const template = TEMPLATES[templateName as keyof typeof TEMPLATES]
 
   if (!template) {
     console.error(`Unknown template: ${templateName}`)
-    console.log('Available: default, mintlify, readme, gitbook, local')
+    console.log('Available: simple, journeys')
     process.exit(1)
   }
 
@@ -102,9 +62,11 @@ export async function init(options: {
   // Next steps
   console.log('Next steps:')
   console.log('1. Update the source URL to your documentation')
-  console.log('2. Customize the journeys for your needs')
+  console.log('2. Customize the questions for your needs')
   console.log('3. Set your API key:')
   console.log('   export OPENAI_API_KEY=sk-...')
+  console.log('   # or for Anthropic:')
+  console.log('   export ANTHROPIC_API_KEY=sk-ant-...')
   console.log('4. Run validation:')
   console.log('   docworks check')
 }

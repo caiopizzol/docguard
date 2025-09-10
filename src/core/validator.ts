@@ -1,23 +1,20 @@
-import crypto from 'crypto'
-import { ValidationResult, JourneyResults } from '../types/config.js'
-import { checkAnswerability } from './ai.js'
-import { getCached, setCached } from './cache.js'
+import {
+  ValidationResult,
+  JourneyResults,
+  DocWorksConfig,
+} from '../types/config.js'
+import { callProvider } from '../providers/index.js'
 
 export async function validateJourneys(
   journeys: Record<string, string[]>,
   docs: string,
   apiKey: string,
-  useCache = true
+  config?: DocWorksConfig
 ): Promise<JourneyResults> {
   const results: JourneyResults = {}
 
   for (const [journey, questions] of Object.entries(journeys)) {
-    results[journey] = await validateQuestions(
-      questions,
-      docs,
-      apiKey,
-      useCache
-    )
+    results[journey] = await validateQuestions(questions, docs, apiKey, config)
   }
 
   return results
@@ -27,36 +24,24 @@ export async function validateQuestions(
   questions: string[],
   docs: string,
   apiKey: string,
-  useCache = true
+  config?: DocWorksConfig
 ): Promise<ValidationResult[]> {
   const results: ValidationResult[] = []
+  const provider = config?.provider || 'openai'
+  const model = config?.model || 'gpt-4o-mini'
 
   for (const question of questions) {
-    // Generate cache key
-    const cacheKey = crypto
-      .createHash('md5')
-      .update(question + docs.substring(0, 1000)) // Use first 1KB for cache key
-      .digest('hex')
-
-    let result: ValidationResult | null = null
-
-    // Try cache first
-    if (useCache) {
-      result = getCached(cacheKey)
-    }
-
-    // If not cached, check with AI
-    if (!result) {
-      const validation = await checkAnswerability(question, docs, apiKey)
-      result = {
-        question,
-        ...validation,
-      }
-
-      // Cache the result
-      if (useCache) {
-        setCached(cacheKey, result)
-      }
+    // Check with AI
+    const validation = await callProvider(
+      provider,
+      model,
+      apiKey,
+      question,
+      docs
+    )
+    const result = {
+      question,
+      ...validation,
     }
 
     results.push(result)

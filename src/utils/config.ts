@@ -7,7 +7,14 @@ export async function loadConfig(configPath: string): Promise<DocWorksConfig> {
     throw new Error(`Config file not found: ${configPath}`)
   }
 
-  const content = fs.readFileSync(configPath, 'utf-8')
+  let content = fs.readFileSync(configPath, 'utf-8')
+
+  // Replace environment variables (${VAR:-default} syntax)
+  content = content.replace(/\$\{([^}]+)\}/g, (match, expr) => {
+    const [varName, defaultValue] = expr.split(':-')
+    return process.env[varName] || defaultValue || match
+  })
+
   const config = yaml.parse(content)
 
   // Validate config
@@ -15,8 +22,8 @@ export async function loadConfig(configPath: string): Promise<DocWorksConfig> {
     throw new Error('Config missing "source" section')
   }
 
-  if (!config.journeys) {
-    throw new Error('Config missing "journeys" section')
+  if (!config.journeys && !config.questions) {
+    throw new Error('Config must have either "questions" or "journeys" section')
   }
 
   return config as DocWorksConfig
