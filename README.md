@@ -1,50 +1,55 @@
 <img width="150" height="62" alt="logo-light" src="https://github.com/user-attachments/assets/a538da6b-3443-45d3-bc25-1604ea3b31b1" />
 <br/><br/>
 
-Ensure your docs answer critical questions. AI-powered validation that checks if developers can actually find what they need.
-
-## The Problem
-
-Your docs mention "authentication" 50 times, but developers still can't figure out HOW to authenticate. Keywords exist, but answers are fragmented across pages. Support tickets spike.
-
-## How It Works
-
-Define what questions your docs must answer. DocWorks uses AI to verify they remain answerable after every change.
-
-```yaml
-# docworks.yml
-questions:
-  critical:
-    - How do I authenticate?
-    - What are the rate limits?
-    - How do I handle errors?
-```
-
-## Install
-
-```bash
-npm install -g docworks
-```
+Ensure your docs work for developers and AI. Validates that critical questions can be answered from your documentation.
 
 ## Quick Start
 
 ```bash
-# 1. Initialize with smart defaults
-docworks init
+# Install globally
+npm install -g docworks
 
-# 2. Check your docs (with your OpenAI key)
+# Initialize for your platform
+docworks init --platform mintlify
+
+# Edit docworks.yml with your docs URL
+# source: https://docs.yourcompany.com
+
+# Run validation
 OPENAI_API_KEY=sk-... docworks check
 ```
 
-Output:
+## How It Works
 
-```
-✅ How do I authenticate?
-✅ What are the rate limits?
-❌ How do I handle errors?
+1. **Point to your docs** - Provide your documentation URL
+2. **Define journeys** - What must developers accomplish?
+3. **AI validates** - Can these journeys be completed?
+4. **Get results** - See what's missing
 
-Documentation check failed:
-Critical questions cannot be answered from current docs
+## Supported Platforms
+
+DocWorks automatically detects and fetches documentation from:
+
+- **Mintlify** - via llms.txt
+- **ReadMe** - via llms.txt
+- **GitBook** - via llms.txt
+- **Any site with llms.txt** - [llmstxt.org](https://llmstxt.org)
+- **Local folders** - for private docs
+
+## Configuration
+
+```yaml
+# docworks.yml
+source: https://docs.yourcompany.com # Your docs URL
+
+journeys:
+  authentication:
+    - How do I authenticate?
+    - Where do I get API keys?
+    - What are the rate limits?
+
+provider: openai # or anthropic
+model: gpt-4o-mini
 ```
 
 ## CI/CD Integration
@@ -64,137 +69,42 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 ```
 
-## Configuration
-
-```yaml
-# docworks.yml
-questions:
-  critical: # These block PRs if unanswerable
-    - How do I install this?
-    - How do I authenticate?
-
-  important: # These warn but don't block
-    - How do I debug issues?
-    - What are the rate limits?
-
-  nice_to_have: # Informational only
-    - Are there TypeScript types?
-
-# Optional: Use your preferred AI provider
-provider: openai # or anthropic, azure
-model: gpt-4o-mini
-```
-
 ## Templates
 
-Start quickly with pre-built templates:
-
 ```bash
-# API documentation
-docworks init --template api
+# For documentation platforms
+docworks init --platform mintlify
+docworks init --platform readme
+docworks init --platform gitbook
 
-# NPM package
-docworks init --template library
-
-# Internal platform
-docworks init --template internal
+# For local documentation
+docworks init --platform local
 ```
 
-## Why DocWorks?
+## Local Documentation
 
-- **Explicit control** - You define what matters, not magic patterns
-- **AI-powered** - Understands context, not just keywords
-- **Progressive adoption** - Start advisory, enable blocking when ready
-- **Provider flexible** - OpenAI, Anthropic, Azure (BYO keys)
-- **Fast** - Cached responses, parallel validation
-
-## Examples
-
-### API Documentation
+For private or local documentation:
 
 ```yaml
-questions:
-  critical:
-    - How do I authenticate with the API?
-    - What are the API endpoints?
-    - How do I handle errors?
-```
+source: ./docs # Path to folder with .md/.mdx files
 
-### Library/Package
-
-```yaml
-questions:
-  critical:
-    - How do I install this package?
-    - How do I import and use it?
-    - What's a basic example?
-```
-
-### Internal Docs
-
-```yaml
-questions:
-  critical:
-    - How do I get access?
-    - Who do I contact for help?
+journeys:
+  internal:
+    - How do I deploy?
     - Where are the runbooks?
-```
-
-## How It Really Works
-
-1. **You define questions** your docs must answer
-2. **DocWorks reads** all your documentation
-3. **AI validates** each question is answerable
-4. **CI/CD enforces** on every PR
-
-No keyword matching. No regex patterns. Just: "Can a developer find this answer?"
-
-## Requirements
-
-- Node.js 16+
-- OpenAI API key (or Anthropic, Azure)
-- Documentation in Markdown
-
-## Pricing
-
-- **DocWorks**: Free, open source, MIT licensed
-- **AI costs**: ~$0.01 per check with caching (you pay provider directly)
-
-## Development
-
-```bash
-# Clone and install
-git clone https://github.com/caiopizzol/docworks
-cd docworks
-npm install
-
-# Run locally
-npm run dev
-
-# Run tests
-npm test
 ```
 
 ## FAQ
 
-**Q: Will this block my PRs?**  
-A: Not by default. Starts in advisory mode. Enable blocking when ready.
+**Q: What if my platform doesn't have llms.txt?**  
+A: Use local mode by pointing to your docs folder, or ask your platform to support [llmstxt.org](https://llmstxt.org)
 
-**Q: What if the AI is wrong?**  
-A: Adjust confidence thresholds, use advisory mode, or override specific questions.
+**Q: How does it fetch online docs?**  
+A: DocWorks looks for `/llms.txt` at your docs URL, which lists all documentation pages
 
-**Q: Can I use this with private docs?**  
-A: Yes. Runs in your CI with your API keys. Docs never leave your infrastructure.
-
-**Q: Does it support other languages?**  
-A: Currently Markdown/MDX. More formats coming soon.
+**Q: Can I test private documentation?**  
+A: Yes, use local mode with `source: ./docs`
 
 ## License
 
 MIT
-
-## Links
-
-- [Documentation](https://docworks.dev)
-- [GitHub](https://github.com/caiopizzol/docworks)
-- [NPM](https://npmjs.com/package/docworks)

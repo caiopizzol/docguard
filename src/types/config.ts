@@ -1,14 +1,9 @@
 export interface DocWorksConfig {
-  source: string | SourceConfig
+  source: string // URL (https://docs.site.com) or local path (./docs)
   journeys: Record<string, string[]>
   provider?: 'openai' | 'anthropic'
   model?: string
   api_key?: string
-}
-
-export interface SourceConfig {
-  type: 'llms.txt' | 'mcp'
-  server?: string // For MCP servers
 }
 
 export interface ValidationResult {
@@ -25,5 +20,4 @@ export interface JourneyResults {
 export interface DocSource {
   name: string
   fetch(): Promise<string>
-  search?(query: string): Promise<string>
 }

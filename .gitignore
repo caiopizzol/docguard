@@ -5,3 +5,5 @@ dist/
 .env
 .husky/_
 *.tsbuildinfo
+.vscode/
+docworks.yml

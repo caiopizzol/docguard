@@ -1,10 +1,9 @@
 import fs from 'fs'
-import path from 'path'
-import { glob } from 'glob'
 
 const TEMPLATES = {
   default: `# DocWorks Configuration
-source: ./llms.txt
+# Point to your documentation URL or local folder
+source: https://docs.example.com  # or ./docs for local
 
 journeys:
   getting_started:
@@ -20,54 +19,8 @@ journeys:
 provider: openai
 model: gpt-4o-mini`,
 
-  api: `# DocWorks Configuration - API Documentation
-source: ./llms.txt
-
-journeys:
-  authentication:
-    - How do I authenticate?
-    - Where do I get API keys?
-    - What auth methods are supported?
-    
-  integration:
-    - What are the endpoints?
-    - How do I handle errors?
-    - What are the rate limits?
-    
-  production:
-    - How do I monitor usage?
-    - Where are status pages?
-    - How do I get support?
-
-provider: openai
-model: gpt-4o-mini`,
-
-  library: `# DocWorks Configuration - Library/Package
-source: ./llms.txt
-
-journeys:
-  setup:
-    - How do I install this package?
-    - How do I import it?
-    - What are the requirements?
-    
-  basic_usage:
-    - What's a hello world example?
-    - What are the main functions?
-    - How do I configure options?
-    
-  typescript:
-    - Does it have TypeScript support?
-    - Where are the type definitions?
-    - How do I use with TypeScript?
-
-provider: openai
-model: gpt-4o-mini`,
-
   mintlify: `# DocWorks Configuration - Mintlify
-source:
-  type: mcp
-  server: "@mintlify/mcp-server"
+source: https://docs.yourcompany.com  # Your Mintlify docs URL
 
 journeys:
   api_reference:
@@ -84,9 +37,7 @@ provider: openai
 model: gpt-4o-mini`,
 
   readme: `# DocWorks Configuration - ReadMe
-source:
-  type: mcp
-  server: "@readme/mcp-server"
+source: https://docs.yourcompany.com  # Your ReadMe docs URL
 
 journeys:
   developer_experience:
@@ -98,15 +49,25 @@ provider: openai
 model: gpt-4o-mini`,
 
   gitbook: `# DocWorks Configuration - GitBook
-source:
-  type: mcp
-  server: "@gitbook/mcp-server"
+source: https://docs.yourcompany.com  # Your GitBook URL
 
 journeys:
   knowledge_base:
     - Is content organized logically?
     - Can I search effectively?
     - Are guides comprehensive?
+
+provider: openai
+model: gpt-4o-mini`,
+
+  local: `# DocWorks Configuration - Local Documentation
+source: ./docs  # Path to your documentation folder
+
+journeys:
+  getting_started:
+    - How do I get started?
+    - Where are examples?
+    - What are the prerequisites?
 
 provider: openai
 model: gpt-4o-mini`,
@@ -130,13 +91,8 @@ export async function init(options: {
 
   if (!template) {
     console.error(`Unknown template: ${templateName}`)
-    console.log('Available: default, api, library, mintlify, readme, gitbook')
+    console.log('Available: default, mintlify, readme, gitbook, local')
     process.exit(1)
-  }
-
-  // Create llms.txt if needed (not for MCP platforms)
-  if (!options.platform && !fs.existsSync('llms.txt')) {
-    await createLLMSTxt()
   }
 
   // Write config
@@ -145,42 +101,10 @@ export async function init(options: {
 
   // Next steps
   console.log('Next steps:')
-  if (!options.platform) {
-    console.log('1. Review llms.txt - ensure all docs are listed')
-  }
-  console.log('2. Set your API key:')
+  console.log('1. Update the source URL to your documentation')
+  console.log('2. Customize the journeys for your needs')
+  console.log('3. Set your API key:')
   console.log('   export OPENAI_API_KEY=sk-...')
-  console.log('3. Run validation:')
+  console.log('4. Run validation:')
   console.log('   docworks check')
-}
-
-async function createLLMSTxt(): Promise<void> {
-  console.log('📝 Creating llms.txt...')
-
-  // Find common documentation files
-  const patterns = ['README.md', 'readme.md', 'docs/**/*.md', '*.md']
-
-  const files = new Set<string>()
-  for (const pattern of patterns) {
-    const matches = await glob(pattern, {
-      ignore: ['node_modules/**', '.git/**', 'CHANGELOG.md'],
-    })
-    matches.forEach((file) => files.add(file))
-  }
-
-  const content = [
-    '# Documentation sources for DocWorks',
-    '# Add your documentation files below, one per line',
-    '# Lines starting with # are comments',
-    '',
-    ...Array.from(files).slice(0, 20), // Limit initial list
-    '',
-    '# Add more files as needed:',
-    '# docs/api/authentication.md',
-    '# examples/quickstart.js',
-    '# https://api.example.com/openapi.json',
-  ].join('\n')
-
-  fs.writeFileSync('llms.txt', content)
-  console.log(`✅ Created llms.txt with ${files.size} documentation files\n`)
 }

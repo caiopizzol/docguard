@@ -15,8 +15,10 @@ program
 program
   .command('init')
   .description('Initialize DocWorks configuration')
-  .option('-t, --template <t>', 'Template: default, api, library', 'default')
-  .option('-p, --platform <p>', 'Platform: mintlify, readme, gitbook')
+  .option(
+    '-p, --platform <platform>',
+    'Platform: mintlify, readme, gitbook, local'
+  )
   .action(init)
 
 program
