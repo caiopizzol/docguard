@@ -28,20 +28,20 @@ export function formatReport(results: JourneyResults): number {
   console.log('\nDocumentation Validation Report\n')
 
   for (const [journey, questions] of Object.entries(results)) {
-    const failed = questions.filter((q) => q.answerable === 'NO')
-    const partial = questions.filter((q) => q.answerable === 'PARTIAL')
-    const success = questions.filter((q) => q.answerable === 'YES')
-
-    const journeyScore = Math.round((success.length / questions.length) * 100)
-
     console.log(`Journey: ${journey}`)
-    console.log(`  Score: ${journeyScore}%`)
-    console.log(`  Complete: ${success.length}`)
-    if (partial.length > 0) console.log(`  Partial: ${partial.length}`)
-    if (failed.length > 0) {
-      console.log(`  Missing: ${failed.length}`)
-      for (const q of failed) {
-        console.log(`     • ${q.question}`)
+    console.log('─'.repeat(40))
+
+    for (const q of questions) {
+      const icon =
+        q.answerable === 'YES' ? '✅' : q.answerable === 'PARTIAL' ? '⚠️' : '❌'
+
+      console.log(`${icon} ${q.question}`)
+      console.log(`   Confidence: ${Math.round(q.confidence * 100)}%`)
+      console.log(`   Path: ${q.path.length} pages searched`)
+
+      if (q.missing?.length) {
+        console.log(`   Missing:`)
+        q.missing.forEach((m) => console.log(`     - ${m}`))
       }
     }
     console.log()

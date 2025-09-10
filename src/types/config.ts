@@ -10,8 +10,10 @@ export interface DocWorksConfig {
 export interface ValidationResult {
   question: string
   answerable: 'YES' | 'PARTIAL' | 'NO'
+  confidence: number
+  path: string[] // URLs visited
   reason: string
-  location?: string
+  missing?: string[] // What's missing
 }
 
 export interface JourneyResults {

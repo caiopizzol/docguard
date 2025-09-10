@@ -39,10 +39,7 @@ export async function validateQuestions(
       question,
       docs
     )
-    const result = {
-      question,
-      ...validation,
-    }
+    const result = validation
 
     results.push(result)
 
@@ -53,7 +50,9 @@ export async function validateQuestions(
         : result.answerable === 'PARTIAL'
           ? '⚠️'
           : '❌'
-    console.log(`  ${icon} ${question}`)
+    console.log(
+      `  ${icon} ${question} (${Math.round(result.confidence * 100)}%)`
+    )
   }
 
   return results
