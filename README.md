@@ -1,200 +1,138 @@
-<img width="150" height="62" alt="logo-light" src="https://github.com/user-attachments/assets/a538da6b-3443-45d3-bc25-1604ea3b31b1" />
-<br/><br/>
+# DocWorks
 
-Ensure your docs answer critical questions. AI-powered validation that checks if developers can actually find what they need.
-
-## The Problem
-
-Your docs mention "authentication" 50 times, but developers still can't figure out HOW to authenticate. Keywords exist, but answers are fragmented across pages. Support tickets spike.
-
-## How It Works
-
-Define what questions your docs must answer. DocWorks uses AI to verify they remain answerable after every change.
-
-```yaml
-# docworks.yml
-questions:
-  critical:
-    - How do I authenticate?
-    - What are the rate limits?
-    - How do I handle errors?
-```
-
-## Install
-
-```bash
-npm install -g docworks
-```
+Ensure your docs work for developers and AI. Tests if humans and AI agents can actually accomplish tasks using your documentation.
 
 ## Quick Start
 
 ```bash
-# 1. Initialize with smart defaults
+# Install
+npm install -g docworks
+
+# Initialize
 docworks init
 
-# 2. Check your docs (with your OpenAI key)
+# Run validation
 OPENAI_API_KEY=sk-... docworks check
 ```
 
-Output:
+## How It Works
+
+DocWorks tests documentation the way developers actually use it - by having AI search and navigate your docs to answer questions:
+
+1. **AI explores your docs** - Uses web search to navigate pages
+2. **Tracks the journey** - Records which pages were visited
+3. **Reports confidence** - Shows how easily answers were found
+4. **Identifies gaps** - Lists exactly what's missing
+
+## Configuration
+
+### Simple Questions
+
+```yaml
+# docworks.yml
+source: https://docs.yourcompany.com
+
+questions:
+  - How do I authenticate?
+  - What are the rate limits?
+  - Where are code examples?
+
+provider: openai
+model: gpt-4o-mini
+```
+
+### Journey Validation
+
+```yaml
+source: https://docs.yourcompany.com
+
+journeys:
+  authentication:
+    - How do I get API keys?
+    - How do I authenticate requests?
+    - How do I handle token refresh?
+
+  error_handling:
+    - What are the error codes?
+    - How do I retry failed requests?
+
+provider: openai
+model: gpt-4o-mini
+```
+
+## Rich Feedback
+
+Instead of simple YES/NO, get actionable insights:
 
 ```
-✅ How do I authenticate?
-✅ What are the rate limits?
-❌ How do I handle errors?
-
-Documentation check failed:
-Critical questions cannot be answered from current docs
+⚠️ How do I authenticate?
+   Confidence: 60%
+   Searched: 3 pages
+   Missing:
+     - API key generation steps
+     - Token refresh documentation
 ```
 
-## CI/CD Integration
+## Multi-Model Testing
+
+Test against multiple AI models using CI/CD:
 
 ```yaml
 # .github/workflows/docs.yml
-name: Documentation Check
+name: Documentation Validation
 on: [pull_request]
 
 jobs:
-  check:
+  validate:
+    strategy:
+      matrix:
+        include:
+          - provider: openai
+            model: gpt-4o
+          - provider: openai
+            model: gpt-4o-mini
+          - provider: anthropic
+            model: claude-3-opus
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - run: npx docworks check
         env:
+          PROVIDER: ${{ matrix.provider }}
+          MODEL: ${{ matrix.model }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 ```
 
-## Configuration
+## Supported Documentation
 
-```yaml
-# docworks.yml
-questions:
-  critical: # These block PRs if unanswerable
-    - How do I install this?
-    - How do I authenticate?
+- **Public docs** - Any site with [llms.txt](https://llmstxt.org)
+- **Platforms** - Mintlify, ReadMe, GitBook
 
-  important: # These warn but don't block
-    - How do I debug issues?
-    - What are the rate limits?
-
-  nice_to_have: # Informational only
-    - Are there TypeScript types?
-
-# Optional: Use your preferred AI provider
-provider: openai # or anthropic, azure
-model: gpt-4o-mini
-```
-
-## Templates
-
-Start quickly with pre-built templates:
+## Commands
 
 ```bash
-# API documentation
-docworks init --template api
+# Initialize config
+docworks init
 
-# NPM package
-docworks init --template library
+# Validate all journeys
+docworks check
 
-# Internal platform
-docworks init --template internal
+# Test specific journey
+docworks check --journey authentication
+
+# Output as JSON
+docworks check --format json
 ```
 
 ## Why DocWorks?
 
-- **Explicit control** - You define what matters, not magic patterns
-- **AI-powered** - Understands context, not just keywords
-- **Progressive adoption** - Start advisory, enable blocking when ready
-- **Provider flexible** - OpenAI, Anthropic, Azure (BYO keys)
-- **Fast** - Cached responses, parallel validation
-
-## Examples
-
-### API Documentation
-
-```yaml
-questions:
-  critical:
-    - How do I authenticate with the API?
-    - What are the API endpoints?
-    - How do I handle errors?
-```
-
-### Library/Package
-
-```yaml
-questions:
-  critical:
-    - How do I install this package?
-    - How do I import and use it?
-    - What's a basic example?
-```
-
-### Internal Docs
-
-```yaml
-questions:
-  critical:
-    - How do I get access?
-    - Who do I contact for help?
-    - Where are the runbooks?
-```
-
-## How It Really Works
-
-1. **You define questions** your docs must answer
-2. **DocWorks reads** all your documentation
-3. **AI validates** each question is answerable
-4. **CI/CD enforces** on every PR
-
-No keyword matching. No regex patterns. Just: "Can a developer find this answer?"
-
-## Requirements
-
-- Node.js 16+
-- OpenAI API key (or Anthropic, Azure)
-- Documentation in Markdown
-
-## Pricing
-
-- **DocWorks**: Free, open source, MIT licensed
-- **AI costs**: ~$0.01 per check with caching (you pay provider directly)
-
-## Development
-
-```bash
-# Clone and install
-git clone https://github.com/caiopizzol/docworks
-cd docworks
-npm install
-
-# Run locally
-npm run dev
-
-# Run tests
-npm test
-```
-
-## FAQ
-
-**Q: Will this block my PRs?**  
-A: Not by default. Starts in advisory mode. Enable blocking when ready.
-
-**Q: What if the AI is wrong?**  
-A: Adjust confidence thresholds, use advisory mode, or override specific questions.
-
-**Q: Can I use this with private docs?**  
-A: Yes. Runs in your CI with your API keys. Docs never leave your infrastructure.
-
-**Q: Does it support other languages?**  
-A: Currently Markdown/MDX. More formats coming soon.
+- **Real-world testing** - AI navigates docs like developers do
+- **Actionable feedback** - Know exactly what to fix
+- **CI/CD ready** - Catch doc regressions before merge
+- **Progressive** - Start simple, add complexity as needed
 
 ## License
 
 MIT
-
-## Links
-
-- [Documentation](https://docworks.dev)
-- [GitHub](https://github.com/caiopizzol/docworks)
-- [NPM](https://npmjs.com/package/docworks)

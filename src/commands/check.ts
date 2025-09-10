@@ -1,18 +1,23 @@
 import { DocWorksConfig, JourneyResults } from '../types/config.js'
 import { loadConfig } from '../utils/config.js'
-import { createSource } from '../sources/base.js'
+import { fetchDocumentation } from '../sources/source.js'
 import { validateJourneys, validateQuestions } from '../core/validator.js'
 import { formatReport, formatJSON } from '../utils/reporter.js'
 
 export async function check(options: {
   config: string
   journey?: string
-  cache?: boolean
-  format?: 'terminal' | 'json' | 'github'
+  format?: 'terminal' | 'json'
+  provider?: string
+  model?: string
 }): Promise<void> {
   try {
     // Load config
     const config = await loadConfig(options.config || 'docworks.yml')
+
+    // Apply overrides
+    if (options.provider) config.provider = options.provider
+    if (options.model) config.model = options.model
 
     // Validate API key
     const apiKey =
@@ -30,19 +35,38 @@ export async function check(options: {
 
     // Load documentation
     console.log('📚 Loading documentation...')
-    const source = await createSource(config)
-    console.log(`Source: ${source.name}\n`)
+    const { content: docs, name: sourceName } = await fetchDocumentation(
+      config.source
+    )
+    console.log(`Source: ${sourceName}\n`)
 
-    const docs = await source.fetch()
+    // Prepare all validations
+    const allValidations: Record<string, string[]> = {}
 
-    // Validate journeys
-    console.log('🔍 Validating journeys...\n')
+    // Add standalone questions as implicit "general" journey
+    if (config.questions) {
+      allValidations.general = config.questions
+    }
+
+    // Add explicit journeys
+    if (config.journeys) {
+      Object.assign(allValidations, config.journeys)
+    }
+
+    // Check if we have anything to validate
+    if (Object.keys(allValidations).length === 0) {
+      console.error('❌ No questions or journeys found in config')
+      process.exit(1)
+    }
+
+    // Validate
+    console.log('🔍 Validating documentation...\n')
 
     let results: JourneyResults
 
     if (options.journey) {
       // Validate single journey
-      const questions = config.journeys[options.journey]
+      const questions = allValidations[options.journey]
       if (!questions) {
         console.error(`Journey "${options.journey}" not found`)
         process.exit(1)
@@ -56,28 +80,23 @@ export async function check(options: {
           questions,
           docs,
           apiKey,
-          options.cache !== false
+          config
         ),
       }
     } else {
-      // Validate all journeys
-      results = await validateJourneys(
-        config.journeys,
-        docs,
-        apiKey,
-        options.cache !== false
-      )
+      // Validate all
+      results = await validateJourneys(allValidations, docs, apiKey, config)
     }
 
     // Format output
     if (options.format === 'json') {
-      console.log(formatJSON(results, source.name))
+      console.log(formatJSON(results, sourceName))
       const hasFailures = Object.values(results).some((questions) =>
         questions.some((q) => q.answerable === 'NO')
       )
       process.exit(hasFailures ? 1 : 0)
     } else {
-      const exitCode = formatReport(results, options.format === 'github')
+      const exitCode = formatReport(results)
       process.exit(exitCode)
     }
   } catch (error) {
