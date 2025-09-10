@@ -1,3 +1,11 @@
+# [0.15.0](https://github.com/caiopizzol/docworks/compare/v0.14.0...v0.15.0) (2025-09-10)
+
+
+### Features
+
+* add threshold option for validation and enhance reporting ([8706eb9](https://github.com/caiopizzol/docworks/commit/8706eb976a8453bc98492d5e241112c81307840c))
+* begin next development cycle [skip ci] ([b835acc](https://github.com/caiopizzol/docworks/commit/b835acca4410882e308750e0f9d265b5be08a8f5))
+
 # [0.14.0](https://github.com/caiopizzol/docworks/compare/v0.13.0...v0.14.0) (2025-09-10)
 
 ### Features
