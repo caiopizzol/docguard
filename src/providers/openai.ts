@@ -25,14 +25,13 @@ ANSWER: [YES/PARTIAL/NO]
 REASON: [One sentence]
 LOCATION: [Where found, or "Not found"]`
 
-    const response = await this.client.chat.completions.create({
+    const response = await this.client.responses.create({
       model: this.model,
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.1,
-      max_tokens: 150,
+      input: prompt,
+      tools: [{ type: 'web_search_preview' }],
     })
 
-    const content = response.choices[0].message.content || ''
+    const content = response.output_text || ''
 
     return {
       answerable: (content.match(/ANSWER:\s*(YES|PARTIAL|NO)/)?.[1] ||

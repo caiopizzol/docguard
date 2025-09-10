@@ -9,7 +9,5 @@ export async function createSource(config: DocWorksConfig): Promise<DocSource> {
     return new LLMSTxtSource(source)
   }
 
-  // Local path - read markdown files
-  const { LocalSource } = await import('./local.js')
-  return new LocalSource(source)
+  throw new Error(`Unsupported source: ${source}`)
 }

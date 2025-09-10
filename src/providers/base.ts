@@ -1,5 +1,5 @@
 import { OpenAIProvider } from './openai.js'
-import { AnthropicProvider } from './anthropic.js'
+// import { AnthropicProvider } from './anthropic.js'
 
 export interface ValidationResult {
   answerable: 'YES' | 'PARTIAL' | 'NO'
@@ -19,9 +19,9 @@ export function createProvider(
   model?: string
 ): AIProvider {
   switch (provider) {
-    case 'anthropic': {
-      return new AnthropicProvider(apiKey, model)
-    }
+    // case 'anthropic': {
+    //   return new AnthropicProvider(apiKey, model)
+    // }
     case 'openai':
     default: {
       return new OpenAIProvider(apiKey, model)
