@@ -26,5 +26,27 @@ export async function loadConfig(configPath: string): Promise<DocWorksConfig> {
     throw new Error('Config must have either "questions" or "journeys" section')
   }
 
+  if (
+    config.threshold !== undefined &&
+    (config.threshold < 0 || config.threshold > 100)
+  ) {
+    throw new Error('Threshold must be between 0 and 100')
+  }
+
   return config as DocWorksConfig
+}
+
+export function getJourneyThreshold(
+  journey: string,
+  config: DocWorksConfig
+): number {
+  const journeyConfig = config.journeys?.[journey]
+  if (
+    journeyConfig &&
+    !Array.isArray(journeyConfig) &&
+    journeyConfig.threshold !== undefined
+  ) {
+    return journeyConfig.threshold
+  }
+  return config.threshold ?? 100
 }

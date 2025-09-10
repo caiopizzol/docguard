@@ -1,12 +1,28 @@
-import { JourneyResults } from '../types/config.js'
+import {
+  JourneyResults,
+  DocWorksConfig,
+  JourneyConfig,
+} from '../types/config.js'
+import { getJourneyThreshold } from './config.js'
 
-export function formatReport(results: JourneyResults): number {
+export function formatReport(
+  results: JourneyResults,
+  config: DocWorksConfig
+): number {
   let totalQuestions = 0
   let answeredQuestions = 0
   let partialQuestions = 0
   const failedJourneys: string[] = []
 
-  // Calculate stats
+  // Check if any journeys have explicit thresholds
+  const hasJourneyThresholds =
+    config.journeys &&
+    Object.entries(config.journeys).some(
+      ([_, journeyConfig]) =>
+        !Array.isArray(journeyConfig) && journeyConfig.threshold !== undefined
+    )
+
+  // Calculate stats and check per-journey thresholds
   for (const [journey, questions] of Object.entries(results)) {
     const answered = questions.filter((q) => q.answerable === 'YES').length
     const partial = questions.filter((q) => q.answerable === 'PARTIAL').length
@@ -16,8 +32,14 @@ export function formatReport(results: JourneyResults): number {
     answeredQuestions += answered
     partialQuestions += partial
 
-    if (failed > 0) {
-      failedJourneys.push(journey)
+    // Only check journey thresholds if we're using journey-specific mode
+    if (hasJourneyThresholds) {
+      const threshold = getJourneyThreshold(journey, config)
+      const journeyScore = Math.round((answered / questions.length) * 100)
+
+      if (journeyScore < threshold) {
+        failedJourneys.push(`${journey} (${journeyScore}% < ${threshold}%)`)
+      }
     }
   }
 
@@ -49,24 +71,39 @@ export function formatReport(results: JourneyResults): number {
 
   // Summary
   console.log('='.repeat(50))
-  console.log(`\nOverall Score: ${score}/100\n`)
+  const threshold = config.threshold ?? 100
+  console.log(`\nOverall Score: ${score}/100 (Threshold: ${threshold})\n`)
 
-  if (score >= 80) {
-    console.log('Documentation is AI-ready!')
-    console.log('Developers and AI agents can successfully use your docs.\n')
-    return 0
-  } else if (score >= 50) {
-    console.log('Documentation needs improvement')
-    console.log('Some journeys cannot be completed.\n')
-    return 0
+  // If any journeys are configured with thresholds, ONLY check those
+  // Otherwise check global
+  if (hasJourneyThresholds) {
+    // Only check journey thresholds
+    if (failedJourneys.length > 0) {
+      console.log('❌ Failed journeys:', failedJourneys.join(', '))
+      return 1
+    } else {
+      console.log('✅ Documentation validation passed!')
+      return 0
+    }
   } else {
-    console.log('Documentation is incomplete')
-    console.log('Many developer journeys will fail.\n')
-    return 1
+    // Only check global threshold
+    if (score >= threshold) {
+      console.log('✅ Documentation validation passed!')
+      return 0
+    } else {
+      console.log(
+        `❌ Documentation validation failed (${score}% < ${threshold}% threshold)`
+      )
+      return 1
+    }
   }
 }
 
-export function formatJSON(results: JourneyResults, source: string): string {
+export function formatJSON(
+  results: JourneyResults,
+  source: string,
+  config: DocWorksConfig
+): string {
   const stats = {
     total: 0,
     answered: 0,
@@ -74,21 +111,43 @@ export function formatJSON(results: JourneyResults, source: string): string {
     missing: 0,
   }
 
-  for (const questions of Object.values(results)) {
+  // Calculate pass/fail for each journey
+  const journeyResults: Record<string, any> = {}
+  for (const [journey, questions] of Object.entries(results)) {
+    const threshold = getJourneyThreshold(journey, config)
+
+    const score = Math.round(
+      (questions.filter((q) => q.answerable === 'YES').length /
+        questions.length) *
+        100
+    )
+
+    journeyResults[journey] = {
+      score,
+      threshold,
+      passed: score >= threshold,
+      questions,
+    }
+
     stats.total += questions.length
     stats.answered += questions.filter((q) => q.answerable === 'YES').length
     stats.partial += questions.filter((q) => q.answerable === 'PARTIAL').length
     stats.missing += questions.filter((q) => q.answerable === 'NO').length
   }
 
+  const overallScore = Math.round((stats.answered / stats.total) * 100)
+  const overallThreshold = config.threshold ?? 100
+
   return JSON.stringify(
     {
       version: '1.0.0',
       timestamp: new Date().toISOString(),
       source,
-      score: Math.round((stats.answered / stats.total) * 100),
+      score: overallScore,
+      threshold: overallThreshold,
+      passed: overallScore >= overallThreshold,
       stats,
-      results,
+      results: journeyResults,
     },
     null,
     2
