@@ -2,33 +2,37 @@ import OpenAI from 'openai'
 import { ValidationResult } from '../types/config.js'
 
 const VALIDATION_SCHEMA = {
-  type: 'object',
-  properties: {
-    answerable: {
-      type: 'string',
-      enum: ['YES', 'PARTIAL', 'NO'],
+  type: 'json_schema' as const,
+  name: 'doc_validation',
+  schema: {
+    type: 'object',
+    properties: {
+      answerable: {
+        type: 'string',
+        enum: ['YES', 'PARTIAL', 'NO'],
+      },
+      confidence: {
+        type: 'number',
+        description: '0-1 confidence score',
+      },
+      path: {
+        type: 'array',
+        items: { type: 'string' },
+        description: 'URLs visited to find answer',
+      },
+      reason: {
+        type: 'string',
+        description: 'Brief explanation',
+      },
+      missing: {
+        type: ['array', 'null'],
+        items: { type: 'string' },
+        description: 'What info is missing (null if nothing is missing)',
+      },
     },
-    confidence: {
-      type: 'number',
-      description: '0-1 confidence score',
-    },
-    path: {
-      type: 'array',
-      items: { type: 'string' },
-      description: 'URLs visited to find answer',
-    },
-    reason: {
-      type: 'string',
-      description: 'Brief explanation',
-    },
-    missing: {
-      type: 'array',
-      items: { type: 'string' },
-      description: 'What info is missing',
-    },
+    required: ['answerable', 'confidence', 'path', 'reason', 'missing'],
+    additionalProperties: false,
   },
-  required: ['answerable', 'confidence', 'path', 'reason'],
-  additionalProperties: false,
 }
 
 export async function callProvider(
@@ -54,36 +58,21 @@ Instructions:
       const client = new OpenAI({ apiKey })
 
       try {
-        const response = await client.chat.completions.create({
+        const response = await client.responses.create({
           model,
-          messages: [{ role: 'user', content: prompt }],
+          input: prompt,
           tools: [
             {
-              type: 'function',
-              function: {
-                name: 'web_search',
-                description: 'Search the web for documentation content',
-                parameters: {
-                  type: 'object',
-                  properties: {
-                    url: { type: 'string', description: 'URL to search' },
-                  },
-                  required: ['url'],
-                },
-              },
+              type: 'web_search_preview',
             },
           ],
-          response_format: {
-            type: 'json_schema',
-            json_schema: {
-              name: 'doc_validation',
-              strict: true,
-              schema: VALIDATION_SCHEMA,
-            },
+          tool_choice: 'required',
+          text: {
+            format: VALIDATION_SCHEMA,
           },
         })
 
-        const content = response.choices[0].message.content
+        const content = response.output_text
         if (!content) {
           throw new Error('No response content from OpenAI')
         }

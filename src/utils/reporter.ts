@@ -39,7 +39,7 @@ export function formatReport(results: JourneyResults): number {
       console.log(`   Confidence: ${Math.round(q.confidence * 100)}%`)
       console.log(`   Path: ${q.path.length} pages searched`)
 
-      if (q.missing?.length) {
+      if (q.missing && q.missing.length > 0) {
         console.log(`   Missing:`)
         q.missing.forEach((m) => console.log(`     - ${m}`))
       }
