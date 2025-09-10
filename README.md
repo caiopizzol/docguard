@@ -1,19 +1,15 @@
-<img width="150" height="62" alt="logo-light" src="https://github.com/user-attachments/assets/a538da6b-3443-45d3-bc25-1604ea3b31b1" />
-<br/><br/>
+# DocWorks
 
-Ensure your docs work for developers and AI. Validates that critical questions can be answered from your documentation.
+Ensure your docs work for developers and AI. Tests if humans and AI agents can actually accomplish tasks using your documentation.
 
 ## Quick Start
 
 ```bash
-# Install globally
+# Install
 npm install -g docworks
 
-# Initialize for your platform
-docworks init --platform mintlify
-
-# Edit docworks.yml with your docs URL
-# source: https://docs.yourcompany.com
+# Initialize
+docworks init
 
 # Run validation
 OPENAI_API_KEY=sk-... docworks check
@@ -21,89 +17,121 @@ OPENAI_API_KEY=sk-... docworks check
 
 ## How It Works
 
-1. **Point to your docs** - Provide your documentation URL
-2. **Define journeys** - What must developers accomplish?
-3. **AI validates** - Can these journeys be completed?
-4. **Get results** - See what's missing
+DocWorks tests documentation the way developers actually use it - by having AI search and navigate your docs to answer questions:
 
-## Supported Platforms
-
-DocWorks automatically detects and fetches documentation from:
-
-- **Mintlify** - via llms.txt
-- **ReadMe** - via llms.txt
-- **GitBook** - via llms.txt
-- **Any site with llms.txt** - [llmstxt.org](https://llmstxt.org)
-- **Local folders** - for private docs
+1. **AI explores your docs** - Uses web search to navigate pages
+2. **Tracks the journey** - Records which pages were visited
+3. **Reports confidence** - Shows how easily answers were found
+4. **Identifies gaps** - Lists exactly what's missing
 
 ## Configuration
 
+### Simple Questions
+
 ```yaml
 # docworks.yml
-source: https://docs.yourcompany.com # Your docs URL
+source: https://docs.yourcompany.com
 
-journeys:
-  authentication:
-    - How do I authenticate?
-    - Where do I get API keys?
-    - What are the rate limits?
+questions:
+  - How do I authenticate?
+  - What are the rate limits?
+  - Where are code examples?
 
-provider: openai # or anthropic
+provider: openai
 model: gpt-4o-mini
 ```
 
-## CI/CD Integration
+### Journey Validation
+
+```yaml
+source: https://docs.yourcompany.com
+
+journeys:
+  authentication:
+    - How do I get API keys?
+    - How do I authenticate requests?
+    - How do I handle token refresh?
+
+  error_handling:
+    - What are the error codes?
+    - How do I retry failed requests?
+
+provider: openai
+model: gpt-4o-mini
+```
+
+## Rich Feedback
+
+Instead of simple YES/NO, get actionable insights:
+
+```
+⚠️ How do I authenticate?
+   Confidence: 60%
+   Searched: 3 pages
+   Missing:
+     - API key generation steps
+     - Token refresh documentation
+```
+
+## Multi-Model Testing
+
+Test against multiple AI models using CI/CD:
 
 ```yaml
 # .github/workflows/docs.yml
-name: Documentation Check
+name: Documentation Validation
 on: [pull_request]
 
 jobs:
-  check:
+  validate:
+    strategy:
+      matrix:
+        include:
+          - provider: openai
+            model: gpt-4o
+          - provider: openai
+            model: gpt-4o-mini
+          - provider: anthropic
+            model: claude-3-opus
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - run: npx docworks check
         env:
+          PROVIDER: ${{ matrix.provider }}
+          MODEL: ${{ matrix.model }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 ```
 
-## Templates
+## Supported Documentation
+
+- **Public docs** - Any site with [llms.txt](https://llmstxt.org)
+- **Platforms** - Mintlify, ReadMe, GitBook
+
+## Commands
 
 ```bash
-# For documentation platforms
-docworks init --platform mintlify
-docworks init --platform readme
-docworks init --platform gitbook
+# Initialize config
+docworks init
 
-# For local documentation
-docworks init --platform local
+# Validate all journeys
+docworks check
+
+# Test specific journey
+docworks check --journey authentication
+
+# Output as JSON
+docworks check --format json
 ```
 
-## Local Documentation
+## Why DocWorks?
 
-For private or local documentation:
-
-```yaml
-source: ./docs # Path to folder with .md/.mdx files
-
-journeys:
-  internal:
-    - How do I deploy?
-    - Where are the runbooks?
-```
-
-## FAQ
-
-**Q: What if my platform doesn't have llms.txt?**  
-A: Use local mode by pointing to your docs folder, or ask your platform to support [llmstxt.org](https://llmstxt.org)
-
-**Q: How does it fetch online docs?**  
-A: DocWorks looks for `/llms.txt` at your docs URL, which lists all documentation pages
-
-**Q: Can I test private documentation?**  
-A: Yes, use local mode with `source: ./docs`
+- **Real-world testing** - AI navigates docs like developers do
+- **Actionable feedback** - Know exactly what to fix
+- **CI/CD ready** - Catch doc regressions before merge
+- **Progressive** - Start simple, add complexity as needed
 
 ## License
 
