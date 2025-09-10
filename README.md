@@ -27,6 +27,8 @@ DocWorks tests documentation the way developers actually use it - by having AI s
 
 ## Configuration
 
+See [`schema.yaml`](./schema.yaml) for the complete configuration schema with validation rules.
+
 ### Simple Questions
 
 ```yaml

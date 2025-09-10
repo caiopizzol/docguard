@@ -1,0 +1,47 @@
+# schema.yaml - DocWorks Configuration Schema
+$schema: http://json-schema.org/draft-07/schema#
+type: object
+required: [source]
+properties:
+  source:
+    type: string
+    description: URL (https://docs.site.com)
+
+  threshold:
+    type: integer
+    minimum: 0
+    maximum: 100
+    default: 100
+    description: Global pass/fail threshold
+
+  questions:
+    type: array
+    items:
+      type: string
+    description: Simple validation questions
+
+  journeys:
+    type: object
+    additionalProperties:
+      oneOf:
+        - type: array
+          items:
+            type: string
+        - type: object
+          properties:
+            threshold:
+              type: integer
+              minimum: 0
+              maximum: 100
+            questions:
+              type: array
+              items:
+                type: string
+
+  provider:
+    enum: [openai, anthropic, google]
+    default: openai
+
+  model:
+    type: string
+    default: gpt-4o-mini
