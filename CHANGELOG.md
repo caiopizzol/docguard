@@ -1,32 +1,28 @@
 # [0.14.0](https://github.com/caiopizzol/docworks/compare/v0.13.0...v0.14.0) (2025-09-10)
 
-
 ### Features
 
-* add dotenv support for environment variable management ([a77a1cf](https://github.com/caiopizzol/docworks/commit/a77a1cfa3f39f451a2003a1b0a5259c320048b91))
-* begin next development cycle [skip ci] ([ce765b4](https://github.com/caiopizzol/docworks/commit/ce765b40fc7460655e60a2037ef7d7f7a038c545))
+- add dotenv support for environment variable management ([a77a1cf](https://github.com/caiopizzol/docworks/commit/a77a1cfa3f39f451a2003a1b0a5259c320048b91))
+- begin next development cycle [skip ci] ([ce765b4](https://github.com/caiopizzol/docworks/commit/ce765b40fc7460655e60a2037ef7d7f7a038c545))
 
 # [0.13.0](https://github.com/caiopizzol/docworks/compare/v0.12.0...v0.13.0) (2025-09-10)
 
-
 ### Features
 
-* begin next development cycle [skip ci] ([ad24f9b](https://github.com/caiopizzol/docworks/commit/ad24f9b4d4c2642968eb6c75f24ab58dc0801936))
+- begin next development cycle [skip ci] ([ad24f9b](https://github.com/caiopizzol/docworks/commit/ad24f9b4d4c2642968eb6c75f24ab58dc0801936))
 
 # [0.12.0](https://github.com/caiopizzol/docworks/compare/v0.11.0...v0.12.0) (2025-09-10)
 
-
 ### Features
 
-* begin next development cycle [skip ci] ([f2ecbd7](https://github.com/caiopizzol/docworks/commit/f2ecbd7abf56b818e3d7e0c153ae7dbbedf7e239))
-* enhance configuration and documentation support ([b607c54](https://github.com/caiopizzol/docworks/commit/b607c54e57ce0792a2bc5354a27a1662fad1b38f))
+- begin next development cycle [skip ci] ([f2ecbd7](https://github.com/caiopizzol/docworks/commit/f2ecbd7abf56b818e3d7e0c153ae7dbbedf7e239))
+- enhance configuration and documentation support ([b607c54](https://github.com/caiopizzol/docworks/commit/b607c54e57ce0792a2bc5354a27a1662fad1b38f))
 
 # [0.11.0](https://github.com/caiopizzol/docworks/compare/v0.10.0...v0.11.0) (2025-09-09)
 
-
 ### Features
 
-* begin next development cycle [skip ci] ([9c7b29f](https://github.com/caiopizzol/docworks/commit/9c7b29f7ca1fa0d61364aa513694d75234208e97))
+- begin next development cycle [skip ci] ([9c7b29f](https://github.com/caiopizzol/docworks/commit/9c7b29f7ca1fa0d61364aa513694d75234208e97))
 
 # [0.10.0](https://github.com/caiopizzol/docworks/compare/v0.9.1...v0.10.0) (2025-09-09)
 

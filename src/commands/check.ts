@@ -10,6 +10,7 @@ export async function check(options: {
   format?: 'terminal' | 'json'
   provider?: string
   model?: string
+  threshold?: string
 }): Promise<void> {
   try {
     // Load config
@@ -18,6 +19,8 @@ export async function check(options: {
     // Apply overrides
     if (options.provider) config.provider = options.provider
     if (options.model) config.model = options.model
+    if (options.threshold !== undefined)
+      config.threshold = parseInt(options.threshold)
 
     // Validate API key
     const apiKey =
@@ -50,7 +53,11 @@ export async function check(options: {
 
     // Add explicit journeys
     if (config.journeys) {
-      Object.assign(allValidations, config.journeys)
+      for (const [journey, journeyConfig] of Object.entries(config.journeys)) {
+        allValidations[journey] = Array.isArray(journeyConfig)
+          ? journeyConfig
+          : journeyConfig.questions
+      }
     }
 
     // Check if we have anything to validate
@@ -90,13 +97,13 @@ export async function check(options: {
 
     // Format output
     if (options.format === 'json') {
-      console.log(formatJSON(results, sourceName))
+      console.log(formatJSON(results, sourceName, config))
       const hasFailures = Object.values(results).some((questions) =>
         questions.some((q) => q.answerable === 'NO')
       )
       process.exit(hasFailures ? 1 : 0)
     } else {
-      const exitCode = formatReport(results)
+      const exitCode = formatReport(results, config)
       process.exit(exitCode)
     }
   } catch (error) {

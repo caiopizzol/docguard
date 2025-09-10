@@ -32,6 +32,7 @@ program
   .option('-f, --format <type>', 'Output: json or terminal', 'terminal')
   .option('--provider <name>', 'Override provider')
   .option('--model <name>', 'Override model')
+  .option('--threshold <number>', 'Override threshold (0-100)')
   .action(check)
 
 program.parse()
