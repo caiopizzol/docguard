@@ -1,3 +1,11 @@
+# [0.14.0](https://github.com/caiopizzol/docworks/compare/v0.13.0...v0.14.0) (2025-09-10)
+
+
+### Features
+
+* add dotenv support for environment variable management ([a77a1cf](https://github.com/caiopizzol/docworks/commit/a77a1cfa3f39f451a2003a1b0a5259c320048b91))
+* begin next development cycle [skip ci] ([ce765b4](https://github.com/caiopizzol/docworks/commit/ce765b40fc7460655e60a2037ef7d7f7a038c545))
+
 # [0.13.0](https://github.com/caiopizzol/docworks/compare/v0.12.0...v0.13.0) (2025-09-10)
 
 
