@@ -1,4 +1,5 @@
-# DocWorks
+<img width="150" height="62" alt="logo-light" src="https://github.com/user-attachments/assets/a538da6b-3443-45d3-bc25-1604ea3b31b1" />
+<br/><br/>
 
 Ensure your docs work for developers and AI. Tests if humans and AI agents can actually accomplish tasks using your documentation.
 
