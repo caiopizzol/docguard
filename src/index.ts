@@ -1,8 +1,15 @@
 #!/usr/bin/env node
 
+import { existsSync } from 'fs'
+import { config as dotenvConfig } from 'dotenv'
 import { Command } from 'commander'
 import { init } from './commands/init.js'
 import { check } from './commands/check.js'
+
+// Only load .env if we're in a DocWorks project directory
+if (existsSync('.env') && existsSync('docworks.yml')) {
+  dotenvConfig()
+}
 
 const program = new Command()
 
