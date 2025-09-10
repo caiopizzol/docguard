@@ -1,3 +1,11 @@
+# [0.16.0](https://github.com/caiopizzol/docworks/compare/v0.15.0...v0.16.0) (2025-09-10)
+
+
+### Features
+
+* begin next development cycle [skip ci] ([0e0d5ad](https://github.com/caiopizzol/docworks/commit/0e0d5ad08dd0e3f0c14389e722b10671af9a4cd3))
+* enhance README with configurable thresholds and CI/CD integration ([093d76e](https://github.com/caiopizzol/docworks/commit/093d76ee40477e79b77291c9eef2bd2e24691c09))
+
 # [0.15.0](https://github.com/caiopizzol/docworks/compare/v0.14.0...v0.15.0) (2025-09-10)
 
 
