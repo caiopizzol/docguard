@@ -40,7 +40,7 @@ questions:
   - What are the rate limits?
   - Where are code examples?
 
-provider: openai
+provider: openai # Currently only OpenAI supported
 model: gpt-4o-mini
 ```
 
@@ -139,40 +139,15 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 ```
 
-### Multi-Model Testing
+## Supported Providers
 
-Test against multiple AI models:
+| Provider  | Status         | Models                             |
+| --------- | -------------- | ---------------------------------- |
+| OpenAI    | ✅ Supported   | gpt-4o, gpt-4o-mini                |
+| Anthropic | 🚧 Coming Soon | claude-3.7-sonnet, claude-4-sonnet |
+| Google    | 🚧 Coming Soon | gemini-pro                         |
 
-```yaml
-# .github/workflows/docs.yml
-name: Documentation Validation
-on: [pull_request]
-
-jobs:
-  validate:
-    strategy:
-      matrix:
-        include:
-          - provider: openai
-            model: gpt-4o
-            threshold: 90
-          - provider: openai
-            model: gpt-4o-mini
-            threshold: 85
-          - provider: anthropic
-            model: claude-3-opus
-            threshold: 90
-
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - run: npx docworks check --threshold ${{ matrix.threshold }}
-        env:
-          PROVIDER: ${{ matrix.provider }}
-          MODEL: ${{ matrix.model }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-```
+**Want to add a provider?** PRs welcome! See [`src/providers/index.ts`](./src/providers/index.ts).
 
 ## Supported Documentation
 
@@ -220,6 +195,19 @@ Start lenient and increase strictness as your documentation improves:
 3. **Staging** - `threshold: 90` (nearly complete)
 4. **Production** - `threshold: 95-100` (comprehensive docs)
 
+## Requirements
+
+- Node.js 16+
+- OpenAI API key with web search capabilities
+
+## Contributing
+
+Contributions welcome! We're especially looking for:
+
+- Additional provider implementations (Anthropic, Google)
+- Documentation platform integrations
+- Journey templates for common use cases
+
 ## Why DocWorks?
 
 - **Real-world testing** - AI navigates docs like developers do
@@ -230,4 +218,4 @@ Start lenient and increase strictness as your documentation improves:
 
 ## License
 
-MIT
+MIT - See [LICENSE](./LICENSE) for details

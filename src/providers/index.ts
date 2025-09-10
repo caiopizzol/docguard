@@ -97,10 +97,12 @@ Instructions:
       }
     }
 
-    case 'anthropic': {
-      // Similar implementation
-      throw new Error('Anthropic not yet implemented')
-    }
+    // Future providers - PRs welcome!
+    case 'anthropic':
+    case 'google':
+      throw new Error(
+        `${provider} provider coming soon. Currently only 'openai' is supported.`
+      )
 
     default:
       throw new Error(`Unknown provider: ${provider}`)

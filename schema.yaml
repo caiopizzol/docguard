@@ -37,9 +37,10 @@ properties:
               type: array
               items:
                 type: string
+          required: [questions]
 
   provider:
-    enum: [openai, anthropic, google]
+    enum: [openai] # anthropic, google - coming soon
     default: openai
 
   model:

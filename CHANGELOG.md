@@ -1,18 +1,16 @@
 # [0.16.0](https://github.com/caiopizzol/docworks/compare/v0.15.0...v0.16.0) (2025-09-10)
 
-
 ### Features
 
-* begin next development cycle [skip ci] ([0e0d5ad](https://github.com/caiopizzol/docworks/commit/0e0d5ad08dd0e3f0c14389e722b10671af9a4cd3))
-* enhance README with configurable thresholds and CI/CD integration ([093d76e](https://github.com/caiopizzol/docworks/commit/093d76ee40477e79b77291c9eef2bd2e24691c09))
+- begin next development cycle [skip ci] ([0e0d5ad](https://github.com/caiopizzol/docworks/commit/0e0d5ad08dd0e3f0c14389e722b10671af9a4cd3))
+- enhance README with configurable thresholds and CI/CD integration ([093d76e](https://github.com/caiopizzol/docworks/commit/093d76ee40477e79b77291c9eef2bd2e24691c09))
 
 # [0.15.0](https://github.com/caiopizzol/docworks/compare/v0.14.0...v0.15.0) (2025-09-10)
 
-
 ### Features
 
-* add threshold option for validation and enhance reporting ([8706eb9](https://github.com/caiopizzol/docworks/commit/8706eb976a8453bc98492d5e241112c81307840c))
-* begin next development cycle [skip ci] ([b835acc](https://github.com/caiopizzol/docworks/commit/b835acca4410882e308750e0f9d265b5be08a8f5))
+- add threshold option for validation and enhance reporting ([8706eb9](https://github.com/caiopizzol/docworks/commit/8706eb976a8453bc98492d5e241112c81307840c))
+- begin next development cycle [skip ci] ([b835acc](https://github.com/caiopizzol/docworks/commit/b835acca4410882e308750e0f9d265b5be08a8f5))
 
 # [0.14.0](https://github.com/caiopizzol/docworks/compare/v0.13.0...v0.14.0) (2025-09-10)
 
